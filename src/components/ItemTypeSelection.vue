@@ -1,6 +1,5 @@
 <template>
   <div class="item-type-selection">
-    <heading text="Select Item Category" />
     <template v-if="itemTypes && itemTypes.length">
       <splide
         ref="splider"
@@ -27,7 +26,6 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import Heading from "../views/Heading.vue";
 
 import ItemTypeTile from "../views/ItemTypeTile.vue";
 
@@ -35,8 +33,7 @@ export default {
   name: "ItemTypeSelection",
 
   components: {
-    ItemTypeTile,
-    Heading
+    ItemTypeTile
   },
 
   data() {
@@ -95,7 +92,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 50px;
+  margin: 20px 0;
 }
 </style>
 

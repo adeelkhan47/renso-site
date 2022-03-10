@@ -3,7 +3,7 @@
     <div class="content">
       <a-avatar
         class="description"
-        :size="70"
+        :size="60"
         src="https://cdn2.clc2l.fr/t/-/H/-HGqrC0.png"
       />
       <a-statistic
@@ -58,7 +58,6 @@ export default {
   background: rgba(255, 255, 255, 0.7);
   border-radius: 5px;
   padding: 2px 5px;
-  margin: 10px;
   border: 1px solid #e8e8e8;
 }
 
@@ -68,7 +67,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 5px;
+  margin: 2px;
 }
 
 .name {
@@ -88,6 +87,10 @@ export default {
 
 <style>
 .item-subtype-tile .ant-statistic-content-value {
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.item-subtype-tile .ant-statistic-content {
+  font-size: 14px;
 }
 </style>

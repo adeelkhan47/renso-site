@@ -1,6 +1,6 @@
 <template>
   <div class="item-subtypes-selection">
-    <heading text="Select Item Sub-Category" />
+    <heading text="Available Items" />
     <ul class="item-subtypes" v-if="itemSubtypes && itemSubtypes.length">
       <li
         class="item-subtype"
@@ -47,13 +47,13 @@ export default {
 .item-subtypes-selection {
   width: 100%;
   height: auto;
-  margin-bottom: 50px;
+  margin: 30px 0;
 }
 
 ul.item-subtypes {
   list-style-type: none;
   margin: 0px;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
   overflow: hidden;
@@ -66,6 +66,6 @@ ul.item-subtypes {
 li.item-subtype {
   width: 100%;
   height: auto;
-  margin: 4px 0;
+  margin: 12px 5px;
 }
 </style>

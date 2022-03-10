@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import "ant-design-vue/dist/antd.css";
+import "./antd.styles.less";
 
 import {
   Avatar,

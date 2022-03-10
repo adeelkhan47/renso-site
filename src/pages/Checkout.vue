@@ -11,7 +11,7 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item ref="name" label="Customer name" prop="name">
+        <a-form-model-item ref="name" label="Name" prop="name">
           <a-input
             v-model="form.name"
             @blur="
@@ -21,29 +21,39 @@
             "
           />
         </a-form-model-item>
-        <a-form-model-item label="Instant delivery" prop="delivery">
-          <a-switch v-model="form.delivery" />
+        <a-form-model-item label="Email" prop="email">
+          <a-input
+            type="email"
+            v-model="form.email"
+            @blur="
+              () => {
+                $refs.email.onFieldBlur();
+              }
+            "
+          />
         </a-form-model-item>
-        <a-form-model-item label="Activity type" prop="type">
-          <a-checkbox-group v-model="form.type">
-            <a-checkbox value="1" name="type"> Online </a-checkbox>
-            <a-checkbox value="2" name="type"> Promotion </a-checkbox>
-            <a-checkbox value="3" name="type"> Offline </a-checkbox>
-          </a-checkbox-group>
+        <a-form-model-item label="Phone number" prop="phone">
+          <a-input
+            v-model="form.phone"
+            @blur="
+              () => {
+                $refs.phone.onFieldBlur();
+              }
+            "
+          />
         </a-form-model-item>
-        <a-form-model-item label="Resources" prop="resource">
-          <a-radio-group v-model="form.resource">
-            <a-radio value="1"> Sponsor </a-radio>
-            <a-radio value="2"> Venue </a-radio>
-          </a-radio-group>
-        </a-form-model-item>
-        <a-form-model-item label="Description" prop="desc">
-          <a-input v-model="form.desc" type="textarea" />
+        <a-form-model-item label="Address" prop="address">
+          <a-input v-model="form.address" type="textarea" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="actionWrapCol">
-          <a-button @click="resetForm"> Reset </a-button>
-          <a-button type="primary" style="margin-left: 10px" @click="onSubmit">
-            Pay Now
+          <a-button icon="redo" @click="resetForm"> Reset </a-button>
+          <a-button
+            type="primary"
+            style="margin-left: 10px"
+            icon="credit-card"
+            @click="onSubmit"
+          >
+            Pay
           </a-button>
         </a-form-model-item>
       </a-form-model>
@@ -63,44 +73,39 @@ export default {
       other: "",
       form: {
         name: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        email: "",
+        phone: "",
+        address: ""
       },
       rules: {
         name: [
           {
             required: true,
-            message: "Please input Activity name",
+            message: "Please input your name",
             trigger: "blur"
+          }
+        ],
+        email: [
+          {
+            type: "email",
+            message: "The input is not valid E-mail!"
           },
           {
-            min: 3,
-            max: 5,
-            message: "Length should be 3 to 5",
+            required: true,
+            message: "Please input your E-mail!"
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            message: "Please input your contact number",
             trigger: "blur"
           }
         ],
-        type: [
-          {
-            type: "array",
-            required: true,
-            message: "Please select at least one activity type",
-            trigger: "change"
-          }
-        ],
-        resource: [
+        address: [
           {
             required: true,
-            message: "Please select activity resource",
-            trigger: "change"
-          }
-        ],
-        desc: [
-          {
-            required: true,
-            message: "Please input activity form",
+            message: "Please input your address",
             trigger: "blur"
           }
         ]

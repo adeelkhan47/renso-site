@@ -23,7 +23,13 @@
     <item-subtypes-selection />
     <extras-selection />
     <div class="actions">
-      <a-button type="primary" size="large" class="action" @click="addToCart">
+      <a-button
+        type="primary"
+        icon="shopping-cart"
+        size="large"
+        class="action"
+        @click="addToCart"
+      >
         Add to Cart
       </a-button>
     </div>
@@ -68,8 +74,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 30px;
-  margin-bottom: 50px;
+  padding-bottom: 5px;
+  margin: 30px 0;
 }
 
 .pickers {

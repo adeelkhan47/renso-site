@@ -1,8 +1,8 @@
 <template>
   <div class="bookings-page">
-    <div class="app-logo">
+    <!-- <div class="app-logo">
       <img class="logo-img" src="../assets/logo.png" alt="Logo" />
-    </div>
+    </div> -->
     <ul class="bookings" v-if="bookings && bookings.length">
       <li class="booking" v-for="booking of bookings" :key="booking.id">
         <booking-tile :booking="booking" />
@@ -20,7 +20,12 @@
         v-model="voucher"
         class="discount"
       >
-        <a-button slot="enterButton" @click="applyVoucher" type="primary">
+        <a-button
+          slot="enterButton"
+          type="primary"
+          icon="tags"
+          @click="applyVoucher"
+        >
           Apply Voucher
         </a-button>
       </a-input-search>
@@ -32,15 +37,26 @@
         class="total"
       >
         <template #suffix>
-          <a-icon type="dollar" />
+          <a-icon type="euro" />
         </template>
       </a-statistic>
     </div>
     <div class="page-row actions">
-      <a-button class="action" size="large" @click="addMoreItems">
+      <a-button
+        class="action"
+        size="large"
+        icon="shopping"
+        @click="addMoreItems"
+      >
         Add More Items
       </a-button>
-      <a-button type="primary" size="large" class="action" @click="checkout">
+      <a-button
+        type="primary"
+        size="large"
+        class="action"
+        icon="credit-card"
+        @click="checkout"
+      >
         Checkout
       </a-button>
     </div>
@@ -92,6 +108,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .app-logo {
@@ -112,7 +129,7 @@ ul.bookings {
   width: 100%;
   list-style-type: none;
   margin: 0px;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
   overflow: hidden;

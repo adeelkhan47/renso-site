@@ -1,6 +1,6 @@
 <template>
   <div class="extras-selection">
-    <heading text="Select Extras" />
+    <heading text="Extras" />
     <ul class="extras" v-if="extras && extras.length">
       <li class="extra" v-for="itemSubtype of extras" :key="itemSubtype.id">
         <item-subtype-selection :itemSubtype="itemSubtype" />
@@ -50,7 +50,7 @@ export default {
 ul.extras {
   list-style-type: none;
   margin: 0px;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
   overflow: hidden;
@@ -63,6 +63,6 @@ ul.extras {
 li.extra {
   width: 100%;
   height: auto;
-  margin: 4px 0;
+  margin: 12px 5px;
 }
 </style>
