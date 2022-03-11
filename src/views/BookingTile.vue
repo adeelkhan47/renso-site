@@ -127,6 +127,7 @@ export default {
   .row {
     flex-direction: column;
     align-items: center;
+    align-content: center;
   }
 
   .block {
@@ -149,6 +150,32 @@ export default {
 }
 
 .action .anticon {
-  line-height: 1.3;
+  line-height: 2;
+}
+
+@media only screen and (max-width: 400px) {
+  .booking-tile {
+    width: 100%;
+    margin: 10px;
+  }
+
+  .block,
+  .space-1,
+  .space-2,
+  .space-3 {
+    width: 100%;
+  }
+
+  .booking-tile .ant-statistic-content {
+    font-size: 11px;
+  }
+
+  .booking-tile .ant-statistic-content-value {
+    font-size: 15px;
+  }
+
+  .space-3 .ant-statistic-content-value {
+    font-size: 14px;
+  }
 }
 </style>

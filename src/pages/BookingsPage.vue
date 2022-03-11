@@ -13,7 +13,7 @@
         <a-empty :image="$empty.PRESENTED_IMAGE_SIMPLE" />
       </div>
     </template>
-    <div class="page-row">
+    <div class="page-row total-row">
       <a-input-search
         placeholder="Voucher Code"
         size="large"
@@ -183,5 +183,39 @@ li.booking {
 .action {
   margin: 0 10px;
   margin-left: 20px;
+}
+
+@media only screen and (max-width: 770px) {
+  .total-row {
+    justify-content: center;
+  }
+
+  .total-row .total {
+    margin-left: 10px;
+  }
+
+  .page-row.actions {
+    justify-content: center;
+  }
+
+  .action {
+    margin: 10px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  ul.bookings {
+    background: transparent;
+    background-image: none;
+    max-height: min(90vh, 500px);
+  }
+}
+</style>
+
+<style>
+@media only screen and (max-width: 450px) {
+  .discount .ant-btn {
+    font-size: 14px;
+  }
 }
 </style>

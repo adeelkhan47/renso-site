@@ -28,8 +28,11 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
 * {
   box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
 }
 
 .no-item-types {

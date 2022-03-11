@@ -1,7 +1,7 @@
 <template>
   <a-layout class="main-layout">
     <a-layout-header class="layout-header">
-      <div class="logo-wrapper">
+      <div class="logo-wrapper" @click="navigateToHome">
         <img class="logo-img" src="../assets/logo.png" alt="Logo" />
         <!-- <span class="logo-text">
           <h1>Renso</h1>
@@ -23,6 +23,12 @@ export default {
 
   components: {
     AppFooterLayout
+  },
+
+  methods: {
+    navigateToHome() {
+      this.$router.push("/");
+    }
   }
 };
 </script>
@@ -56,6 +62,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding: 5px;
+  cursor: pointer;
 }
 
 .logo-img {

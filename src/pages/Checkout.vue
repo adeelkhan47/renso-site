@@ -45,12 +45,15 @@
         <a-form-model-item label="Address" prop="address">
           <a-input v-model="form.address" type="textarea" />
         </a-form-model-item>
-        <a-form-model-item :wrapper-col="actionWrapCol">
-          <a-button icon="redo" @click="resetForm"> Reset </a-button>
+        <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
+          <a-button icon="redo" class="action" @click="resetForm">
+            Reset
+          </a-button>
           <a-button
             type="primary"
             style="margin-left: 10px"
             icon="credit-card"
+            class="action"
             @click="onSubmit"
           >
             Pay
@@ -162,5 +165,26 @@ img.logo-img {
   flex-direction: column;
   margin-bottom: 70px;
   overflow: hidden;
+}
+</style>
+
+<style>
+.checkout .ant-form-item {
+  margin-bottom: 5px;
+}
+
+.checkout .ant-form-item .ant-form-item-label {
+  line-height: 1.5;
+  padding-bottom: 0px;
+}
+
+@media only screen and (max-width: 770px) {
+  .actions,
+  .actions .ant-form-item-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
