@@ -2688,29 +2688,18 @@ function getItemSubtypes() {
 
 function getItemTypes() {
   return fakeApiCall({
-    total_rows: 3,
+    total_rows: 2,
     objects: [
-      {
-        id: 3,
-        name: "Extra",
-        maintenance: 0,
-        image: "https://cdn2.clc2l.fr/t/-/H/-HGqrC0.png",
-        delivery_available: true
-      },
       {
         id: 2,
         name: "Bike",
         maintenance: 1,
-        image:
-          "https://cdn.pakistanistores.com/data/bjorn/thumbs/fff9b5c28dfe7ca07fd9c5e2b8e9eb7f.jpg",
         delivery_available: true
       },
       {
         id: 1,
         name: "Boat",
         maintenance: 2,
-        image:
-          "https://images.all-free-download.com/images/graphiclarge/beach_hiking_lake_landscape_light_mist_nature_600488.jpg",
         delivery_available: true
       }
     ]
@@ -12534,7 +12523,7 @@ function getBookingStatusList() {
 }
 
 const FAKE_API = {
-  USE_FAKE: true,
+  USE_FAKE: false,
   getBookingStatusList,
   getBookingWidgets,
   getPageBooking,

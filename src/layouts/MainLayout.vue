@@ -7,6 +7,12 @@
           <h1>Renso</h1>
         </span> -->
       </div>
+      <a-button
+        type="primary"
+        shape="circle"
+        icon="shopping-cart"
+        @click="openCart"
+      />
     </a-layout-header>
     <a-layout-content class="layout-content">
       <router-view />
@@ -27,7 +33,11 @@ export default {
 
   methods: {
     navigateToHome() {
-      this.$router.push("/");
+      this.$router.push("/home");
+    },
+
+    openCart() {
+      if (this.$route.name !== "Cart") this.$router.push("/cart");
     }
   }
 };
@@ -49,6 +59,10 @@ export default {
   left: 0px;
   position: fixed;
   z-index: 100;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo-wrapper {

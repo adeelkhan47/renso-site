@@ -13,6 +13,7 @@ module.exports = {
     semi: "off",
     indent: "off",
     quotes: "off",
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "standard/no-callback-literal": "off"
   }
 };

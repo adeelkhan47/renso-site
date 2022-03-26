@@ -1,11 +1,7 @@
 <template>
   <div class="item-subtype-tile">
     <div class="content">
-      <a-avatar
-        class="description"
-        :size="60"
-        src="https://cdn2.clc2l.fr/t/-/H/-HGqrC0.png"
-      />
+      <a-avatar class="description" :size="60" :src="itemSubtype.image" />
       <a-statistic
         title="Sub-Category name"
         :value="itemSubtype.name"

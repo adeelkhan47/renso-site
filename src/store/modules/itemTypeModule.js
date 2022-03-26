@@ -7,6 +7,7 @@ const itemTypeModule = {
     return {
       loading: false,
       selectedItemType: null,
+      extraItemType: null,
       itemTypes: []
     };
   },
@@ -32,14 +33,27 @@ const itemTypeModule = {
           console.error(err);
           ctx.commit("LOADING", false);
         });
+
+      itemTypeApi
+        .getAllItemTypes()
+        .then((res) => {
+          if (res && res.data) {
+            const types = res.data.objects;
+            const extra = types.find(
+              (obj) => obj.name && obj.name.toLowerCase() === "extra"
+            );
+
+            if (extra) ctx.commit("EXTRA_ITEM_TYPE", extra);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     setSelectedItemType(ctx, itemType) {
       if (itemType && Object.keys(itemType).length) {
         ctx.commit("SELECTED_ITEM_TYPE", itemType);
-        ctx.dispatch("itemSubtypeModule/populateItemSubTypes", itemType.id, {
-          root: true
-        });
       }
     }
   },
@@ -55,6 +69,10 @@ const itemTypeModule = {
 
     SELECTED_ITEM_TYPE(state, itemType) {
       state.selectedItemType = itemType;
+    },
+
+    EXTRA_ITEM_TYPE(state, val) {
+      state.extraItemType = val;
     }
   }
 };

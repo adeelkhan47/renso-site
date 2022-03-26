@@ -1,4 +1,3 @@
-import Vue from "vue";
 import { itemSubtypeApi } from "../../apis";
 
 const itemSubtypeModule = {
@@ -7,41 +6,62 @@ const itemSubtypeModule = {
   state() {
     return {
       loading: false,
-      itemSubtypesMap: {}
+      loading_ex: false,
+      itemSubtypes: [],
+      extras: [],
+      selectedItemSubtypes: {}
     };
   },
 
   getters: {
-    getItemSubtypes: (state) => (itemTypeId) => {
-      if (
-        itemTypeId &&
-        Object.hasOwnProperty.call(state.itemSubtypesMap, itemTypeId)
-      ) {
-        return state.itemSubtypesMap[itemTypeId] || [];
-      } else {
-        return [];
+    getSubtypeQuantity(state) {
+      return (id) => {
+        if (Object.hasOwnProperty.call(state.selectedItemSubtypes, id)) {
+          return state.selectedItemSubtypes[id].length;
+        } else {
+          return 0;
+        }
+      };
+    },
+
+    canAddToCart(state) {
+      let can = false;
+      for (const key in state.selectedItemSubtypes) {
+        const selection = state.selectedItemSubtypes[key];
+        if (selection && selection.length) {
+          can = true;
+          break;
+        }
       }
+      return can;
+    },
+
+    getSelectionDetails(state) {
+      const selectedItems = [];
+
+      for (const key in state.selectedItemSubtypes) {
+        const selection = state.selectedItemSubtypes[key];
+        if (selection && selection.length) {
+          const id = Number.parseInt(key);
+          selectedItems.push({
+            item_sub_type_id: id,
+            item_ids: selection
+          });
+        }
+      }
+
+      return selectedItems;
     }
   },
 
   actions: {
-    populateItemSubTypes(ctx, itemTypeId) {
-      if (
-        !itemTypeId ||
-        Object.hasOwnProperty.call(ctx.state.itemSubtypesMap, itemTypeId)
-      ) {
-        return;
-      }
-
+    getItemSubtypes(ctx, { locationId, itemTypeId, startTime, endTime }) {
       ctx.commit("LOADING", true);
       itemSubtypeApi
-        .getSubtypesByItemTypeId(itemTypeId)
+        .getItemSubtypes(locationId, itemTypeId, startTime, endTime)
         .then((res) => {
           if (res && res.data) {
-            ctx.commit("ADD_ITEM_SUBTYPES", {
-              itemTypeId,
-              itemSubtypes: res.data.objects
-            });
+            ctx.commit("ITEM_SUBTYPES", res.data.objects);
           }
           ctx.commit("LOADING", false);
         })
@@ -49,6 +69,64 @@ const itemSubtypeModule = {
           console.error(err);
           ctx.commit("LOADING", false);
         });
+    },
+
+    getExtraSubtypes(ctx, { locationId, extraTypeId, startTime, endTime }) {
+      ctx.commit("LOADING_EX", true);
+      itemSubtypeApi
+        .getItemSubtypes(locationId, extraTypeId, startTime, endTime)
+        .then((res) => {
+          if (res && res.data) {
+            ctx.commit("EXTRAS", res.data.objects);
+          }
+          ctx.commit("LOADING_EX", false);
+        })
+        .catch((err) => {
+          console.error(err);
+          ctx.commit("LOADING_EX", false);
+        });
+    },
+
+    setItemSubtypes(ctx, val) {
+      ctx.commit("ITEM_SUBTYPES", val);
+    },
+
+    setExtraSubtypes(ctx, val) {
+      ctx.commit("EXTRAS", val);
+    },
+
+    addToItemSubtype(ctx, rawObj) {
+      if (rawObj && rawObj.item_sub_type_object && rawObj.available_item_ids) {
+        if (rawObj.available_item_ids.length) {
+          const itemSubtypeId = rawObj.item_sub_type_object.id;
+          if (
+            Object.hasOwnProperty.call(
+              ctx.state.selectedItemSubtypes,
+              itemSubtypeId
+            )
+          ) {
+            const existing = ctx.state.selectedItemSubtypes[itemSubtypeId];
+            const remaining = rawObj.available_item_ids.filter(
+              (id) => !existing.includes(id)
+            );
+            ctx.commit("ADD_SELECTED_ITEM_SUBTYPE", {
+              key: itemSubtypeId,
+              value: [...existing, remaining[0]]
+            });
+          } else {
+            ctx.commit("ADD_SELECTED_ITEM_SUBTYPE", {
+              key: itemSubtypeId,
+              value: [rawObj.available_item_ids[0]]
+            });
+          }
+        }
+      }
+    },
+
+    removeFromItemSubtype(ctx, id) {
+      if (Object.hasOwnProperty.call(ctx.state.selectedItemSubtypes, id)) {
+        ctx.commit("REMOVE_SELECTED_ITEM_SUBTYPE", id);
+      }
     }
   },
 
@@ -57,8 +135,36 @@ const itemSubtypeModule = {
       state.loading = val;
     },
 
-    ADD_ITEM_SUBTYPES(state, { itemTypeId, itemSubtypes }) {
-      Vue.set(state.itemSubtypesMap, itemTypeId, itemSubtypes);
+    LOADING_EX(state, val) {
+      state.loading_ex = val;
+    },
+
+    ITEM_SUBTYPES(state, value) {
+      state.itemSubtypes = value;
+    },
+
+    EXTRAS(state, val) {
+      state.extras = val;
+    },
+
+    ADD_SELECTED_ITEM_SUBTYPE(state, { key, value }) {
+      state.selectedItemSubtypes[key] = value;
+      state.selectedItemSubtypes = JSON.parse(
+        JSON.stringify(state.selectedItemSubtypes)
+      );
+    },
+
+    REMOVE_SELECTED_ITEM_SUBTYPE(state, id) {
+      state.selectedItemSubtypes[id].length =
+        state.selectedItemSubtypes[id].length - 1;
+
+      state.selectedItemSubtypes = JSON.parse(
+        JSON.stringify(state.selectedItemSubtypes)
+      );
+    },
+
+    RESET_SELECTION(state) {
+      state.selectedItemSubtypes = {};
     }
   }
 };

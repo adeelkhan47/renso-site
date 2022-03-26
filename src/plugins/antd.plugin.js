@@ -14,6 +14,9 @@ import {
   Input,
   Layout,
   Radio,
+  Result,
+  Select,
+  Spin,
   Statistic,
   Switch,
   TimePicker
@@ -33,6 +36,9 @@ Vue.use(DatePicker);
 Vue.use(TimePicker);
 Vue.use(Checkbox);
 Vue.use(Switch);
+Vue.use(Select);
+Vue.use(Spin);
+Vue.use(Result);
 
 Vue.prototype.$empty = Empty;
 // Vue.prototype.$message = message;

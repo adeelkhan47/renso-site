@@ -20,7 +20,7 @@
         />
         <a-statistic
           title="location"
-          :value="booking.location"
+          :value="location(booking)"
           class="block space-2"
         >
           <template #prefix>
@@ -40,7 +40,13 @@
         />
       </div>
       <div class="row">
-        <a-button type="danger" shape="circle" icon="delete" class="action" />
+        <a-button
+          type="danger"
+          shape="circle"
+          icon="delete"
+          class="action"
+          @click="() => deleteB(booking)"
+        />
       </div>
     </div>
   </div>
@@ -48,6 +54,7 @@
 
 <script>
 import moment from "moment";
+import { mapActions } from "vuex";
 
 export default {
   name: "BookingTile",
@@ -63,6 +70,25 @@ export default {
     time: () => (time) => {
       if (!time) return "";
       else return moment(time).format("L, LT");
+    },
+
+    location: () => (booking) => {
+      if (
+        booking &&
+        booking.item &&
+        booking.item.item_locations &&
+        booking.item.item_locations.length
+      ) {
+        return booking.item.item_locations[0].location.name;
+      } else return "-";
+    }
+  },
+
+  methods: {
+    ...mapActions("bookingModule", ["deleteBooking"]),
+
+    deleteB(booking) {
+      this.deleteBooking(booking.id);
     }
   }
 };

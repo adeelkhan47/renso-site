@@ -1,94 +1,120 @@
 <template>
   <div class="checkout">
-    <div class="app-logo">
-      <img class="logo-img" src="../assets/logo.png" alt="Logo" />
-    </div>
-    <div class="form">
-      <a-form-model
-        ref="ruleForm"
-        :model="form"
-        :rules="rules"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <a-form-model-item ref="name" label="Name" prop="name">
-          <a-input
-            v-model="form.name"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur();
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item label="Email" prop="email">
-          <a-input
-            type="email"
-            v-model="form.email"
-            @blur="
-              () => {
-                $refs.email.onFieldBlur();
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item label="Phone number" prop="phone">
-          <a-input
-            v-model="form.phone"
-            @blur="
-              () => {
-                $refs.phone.onFieldBlur();
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item label="Address" prop="address">
+    <template>
+      <div class="app-logo">
+        <img class="logo-img" src="../assets/logo.png" alt="Logo" />
+      </div>
+      <div class="form">
+        <a-form-model
+          ref="ruleForm"
+          :model="form"
+          :rules="rules"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-form-model-item ref="client_name" label="Name" prop="client_name">
+            <a-input
+              v-model="form.client_name"
+              @blur="
+                () => {
+                  $refs.client_name.onFieldBlur();
+                }
+              "
+            />
+          </a-form-model-item>
+          <a-form-model-item label="Email" prop="client_email">
+            <a-input
+              type="email"
+              v-model="form.client_email"
+              @blur="
+                () => {
+                  $refs.client_email.onFieldBlur();
+                }
+              "
+            />
+          </a-form-model-item>
+          <a-form-model-item label="Phone number" prop="phone_number">
+            <a-input
+              v-model="form.phone_number"
+              @blur="
+                () => {
+                  $refs.phone_number.onFieldBlur();
+                }
+              "
+            />
+          </a-form-model-item>
+          <!-- <a-form-model-item label="Address" prop="address">
           <a-input v-model="form.address" type="textarea" />
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
-          <a-button icon="redo" class="action" @click="resetForm">
-            Reset
-          </a-button>
-          <a-button
-            type="primary"
-            style="margin-left: 10px"
-            icon="credit-card"
-            class="action"
-            @click="onSubmit"
-          >
-            Pay
-          </a-button>
-        </a-form-model-item>
-      </a-form-model>
-    </div>
+        </a-form-model-item> -->
+          <template v-if="extraFields && extraFields.length">
+            <a-form-model-item
+              v-for="fieldObj of extraFields"
+              :key="fieldObj.id"
+              :label="fieldObj.name"
+            >
+              <a-input v-model="form[fieldObj.name]" />
+            </a-form-model-item>
+          </template>
+          <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
+            <a-button icon="redo" class="action" @click="resetForm">
+              Reset
+            </a-button>
+            <a-button
+              type="primary"
+              style="margin-left: 10px"
+              icon="credit-card"
+              class="action"
+              :disabled="!isReady"
+              @click="onSubmit"
+            >
+              Pay
+            </a-button>
+          </a-form-model-item>
+        </a-form-model>
+      </div>
+    </template>
+
+    <template v-if="loading">
+      <div class="full-page-cover">
+        <a-spin size="large" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import { orderApi } from "../apis";
+import {
+  APPLIED_VOUCHER_KEY,
+  EXISTING_CART_ID_KEY,
+  getIt,
+  STRIPE_PUBLIC_KEY
+} from "../utils/localStorage.util";
+
 export default {
   name: "Checkout",
 
   data() {
     return {
+      loading: false,
       labelCol: { sm: {}, md: { span: 8 } },
       wrapperCol: { sm: {}, md: { span: 10 } },
       actionWrapCol: { sm: {}, md: { span: 9, offset: 9 } },
       other: "",
       form: {
-        name: "",
-        email: "",
-        phone: "",
-        address: ""
+        client_name: "",
+        client_email: "",
+        phone_number: ""
       },
       rules: {
-        name: [
+        client_name: [
           {
             required: true,
             message: "Please input your name",
             trigger: "blur"
           }
         ],
-        email: [
+        client_email: [
           {
             type: "email",
             message: "The input is not valid E-mail!"
@@ -98,37 +124,79 @@ export default {
             message: "Please input your E-mail!"
           }
         ],
-        phone: [
+        phone_number: [
           {
             required: true,
             message: "Please input your contact number",
             trigger: "blur"
           }
-        ],
-        address: [
-          {
-            required: true,
-            message: "Please input your address",
-            trigger: "blur"
-          }
         ]
-      }
+      },
+      extraFields: []
     };
+  },
+
+  computed: {
+    isReady() {
+      return !!(
+        this.form.client_name &&
+        this.form.client_email &&
+        this.form.phone_number
+      );
+    }
+  },
+
+  created() {
+    this.loading = true;
+    orderApi
+      .getOrderExtraFields()
+      .then((res) => {
+        if (res && res.data && res.data.objects && res.data.objects.length) {
+          this.extraFields = res.data.objects;
+        }
+        this.loading = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        this.loading = false;
+      });
   },
 
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          this.$router.push("/");
+          this.createOrder();
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
+    },
+    createOrder() {
+      this.loading = true;
+      const cartId = getIt(EXISTING_CART_ID_KEY);
+      const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
+      orderApi
+        .createOrder({
+          time_period: "01-01-2000 00:00:00",
+          cart_id: cartId,
+          voucher: appliedVoucher,
+          ...this.form
+        })
+        .then((res) => {
+          const sessionId = res.data.objects.session_id;
+          // eslint-disable-next-line no-undef
+          const stripe = new Stripe(STRIPE_PUBLIC_KEY);
+          this.loading = false;
+          stripe.redirectToCheckout({ sessionId: sessionId });
+        })
+        .catch((err) => {
+          console.error(err);
+          this.loading = false;
+        });
     }
   }
 };

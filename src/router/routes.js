@@ -17,14 +17,24 @@ const routes = [
         component: HomePage
       },
       {
-        path: "/bookings",
-        name: "Bookings",
+        path: "/cart",
+        name: "Cart",
         component: () => import("../pages/BookingsPage.vue")
       },
       {
         path: "/checkout",
         name: "Checkout",
         component: () => import("../pages/Checkout.vue")
+      },
+      {
+        path: "/success",
+        name: "Success",
+        component: () => import("../pages/PaymentSuccess.vue")
+      },
+      {
+        path: "/failure",
+        name: "Failure",
+        component: () => import("../pages/PaymentFailure.vue")
       }
     ]
   }

@@ -54,12 +54,32 @@ export default {
             focus: "center"
           }
         }
-      }
+      },
+      currentSlideIndex: null
     };
   },
 
   computed: {
-    ...mapState("itemTypeModule", ["itemTypes"])
+    ...mapState("itemTypeModule", ["itemTypes", "selectedItemType"])
+  },
+
+  watch: {
+    currentSlideIndex() {
+      if (this.currentSlideIndex !== null && this.$refs && this.$refs.splider) {
+        this.$refs.splider.go(this.currentSlideIndex);
+      }
+    }
+  },
+
+  mounted() {
+    if (
+      this.selectedItemType &&
+      Object.hasOwnProperty.call(this.selectedItemType, "index")
+    ) {
+      this.currentSlideIndex = this.selectedItemType.index;
+    } else {
+      this.currentSlideIndex = 0;
+    }
   },
 
   methods: {
@@ -69,16 +89,21 @@ export default {
 
     selectSlide(slide, event) {
       if (event && Object.hasOwnProperty.call(event, "index")) {
-        this.$refs.splider.go(event.index);
+        this.currentSlideIndex = event.index;
       }
     },
 
     itemActivated(slide, event) {
-      if (event && event.slide && event.slide.hasAttribute("itemType")) {
+      if (
+        event &&
+        event.slide &&
+        event.slide.hasAttribute("itemType") &&
+        event.index === this.currentSlideIndex
+      ) {
         let itemType = event.slide.getAttribute("itemType");
         if (itemType && itemType.length) {
           itemType = JSON.parse(itemType);
-          this.setSelectedItemType(itemType);
+          this.setSelectedItemType({ ...itemType, index: event.index });
         }
       }
     }

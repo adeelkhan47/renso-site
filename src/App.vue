@@ -12,7 +12,7 @@ export default {
 
   created() {
     this.initializeItemTypesModule();
-    this.initializeBookings();
+    this.initializeLocations();
   },
 
   methods: {
@@ -20,8 +20,8 @@ export default {
       initializeItemTypesModule: "init"
     }),
 
-    ...mapActions("bookingModule", {
-      initializeBookings: "init" // DELETE ME
+    ...mapActions("locationModule", {
+      initializeLocations: "init"
     })
   }
 };
@@ -37,5 +37,21 @@ export default {
 
 .no-item-types {
   margin-bottom: 50px;
+}
+
+.full-page-cover {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  width: 100vw;
+  height: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  background: rgba(211, 211, 211, 0.8);
+  overflow: hidden;
 }
 </style>

@@ -7,7 +7,7 @@
         v-for="itemSubtype of itemSubtypes"
         :key="itemSubtype.id"
       >
-        <item-subtype-selection :itemSubtype="itemSubtype" />
+        <item-subtype-selection :itemSubtypeRaw="itemSubtype" />
       </li>
     </ul>
     <template v-else>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Heading from "../views/Heading.vue";
 import ItemSubtypeSelection from "./ItemSubtypeSelection.vue";
 
@@ -29,15 +29,50 @@ export default {
   components: { ItemSubtypeSelection, Heading },
 
   computed: {
+    ...mapState(["startTime", "endTime"]),
+    ...mapState("locationModule", ["selectedLocation"]),
     ...mapState("itemTypeModule", ["selectedItemType"]),
-    ...mapGetters("itemSubtypeModule", ["getItemSubtypes"]),
+    ...mapState("itemSubtypeModule", ["itemSubtypes"])
+  },
 
-    itemSubtypes() {
-      return this.getItemSubtypes(
-        this.selectedItemType && this.selectedItemType.id
-          ? this.selectedItemType.id
-          : null
-      );
+  watch: {
+    startTime() {
+      this.loadItemSubtypes();
+    },
+
+    endTime() {
+      this.loadItemSubtypes();
+    },
+
+    selectedLocation() {
+      this.loadItemSubtypes();
+    },
+
+    selectedItemType() {
+      this.loadItemSubtypes();
+    }
+  },
+
+  methods: {
+    ...mapActions("itemSubtypeModule", ["getItemSubtypes", "setItemSubtypes"]),
+
+    loadItemSubtypes() {
+      if (
+        this.selectedLocation &&
+        this.selectedItemType &&
+        this.selectedItemType.id &&
+        this.startTime &&
+        this.endTime
+      ) {
+        this.getItemSubtypes({
+          locationId: this.selectedLocation,
+          itemTypeId: this.selectedItemType.id,
+          startTime: this.startTime,
+          endTime: this.endTime
+        });
+      } else {
+        this.setItemSubtypes([]);
+      }
     }
   }
 };

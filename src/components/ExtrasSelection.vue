@@ -3,7 +3,7 @@
     <heading text="Extras" />
     <ul class="extras" v-if="extras && extras.length">
       <li class="extra" v-for="itemSubtype of extras" :key="itemSubtype.id">
-        <item-subtype-selection :itemSubtype="itemSubtype" />
+        <item-subtype-selection :itemSubtypeRaw="itemSubtype" />
       </li>
     </ul>
     <template v-else>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Heading from "../views/Heading.vue";
 import ItemSubtypeSelection from "./ItemSubtypeSelection.vue";
 
@@ -24,17 +24,54 @@ export default {
 
   components: { ItemSubtypeSelection, Heading },
 
-  data() {
-    return {
-      extrasId: 3
-    };
+  computed: {
+    ...mapState(["startTime", "endTime"]),
+    ...mapState("locationModule", ["selectedLocation"]),
+    ...mapState("itemTypeModule", ["extraItemType"]),
+    ...mapState("itemSubtypeModule", ["extras"])
   },
 
-  computed: {
-    ...mapGetters("itemSubtypeModule", ["getItemSubtypes"]),
+  watch: {
+    startTime() {
+      this.loadExtras();
+    },
 
-    extras() {
-      return this.getItemSubtypes(this.extrasId);
+    endTime() {
+      this.loadExtras();
+    },
+
+    selectedLocation() {
+      this.loadExtras();
+    },
+
+    extraItemType() {
+      this.loadExtras();
+    }
+  },
+
+  methods: {
+    ...mapActions("itemSubtypeModule", [
+      "getExtraSubtypes",
+      "setExtraSubtypes"
+    ]),
+
+    loadExtras() {
+      if (
+        this.selectedLocation &&
+        this.extraItemType &&
+        this.extraItemType.id &&
+        this.startTime &&
+        this.endTime
+      ) {
+        this.getExtraSubtypes({
+          locationId: this.selectedLocation,
+          extraTypeId: this.extraItemType.id,
+          startTime: this.startTime,
+          endTime: this.endTime
+        });
+      } else {
+        this.setExtraSubtypes([]);
+      }
     }
   }
 };
