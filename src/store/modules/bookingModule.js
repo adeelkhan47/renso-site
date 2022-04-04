@@ -16,7 +16,8 @@ const bookingModule = {
       subtotal: 0,
       totalPrice: 0,
       finalPrice: 0,
-      taxes: []
+      taxes: [],
+      hasBag: false
     };
   },
 
@@ -27,7 +28,7 @@ const bookingModule = {
   },
 
   actions: {
-    getBookings(ctx, { cartId, voucher }) {
+    getBookings(ctx, { cartId, voucher, cb }) {
       ctx.commit("LOADING", true);
       bookingApi
         .getBookings(cartId, voucher)
@@ -41,6 +42,17 @@ const bookingModule = {
               "FINAL_PRICE",
               res.data.objects.actual_total_price_after_tax
             );
+            ctx.commit(
+              "HAS_BAG",
+              !!(res.data.objects.bookings && res.data.objects.bookings.length)
+            );
+
+            if (cb && typeof cb === "function") {
+              cb({
+                success: true,
+                data: res.data.objects.voucher
+              });
+            }
           }
           ctx.commit("LOADING", false);
         })
@@ -109,6 +121,10 @@ const bookingModule = {
           console.error(err);
           ctx.commit("LOADING", false);
         });
+    },
+
+    setHasBag(ctx, val) {
+      ctx.commit("HAS_BAG", val);
     }
   },
 
@@ -135,6 +151,10 @@ const bookingModule = {
 
     TAXES(state, val) {
       state.taxes = val;
+    },
+
+    HAS_BAG(state, val) {
+      state.hasBag = val;
     }
   }
 };

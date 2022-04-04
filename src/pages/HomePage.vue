@@ -7,6 +7,8 @@
         <div class="pickers">
           <a-date-picker
             class="picker"
+            :disabled-date="disabledStartDate"
+            :disabled-time="disabledStartTime"
             show-time
             placeholder="Start Time"
             format="D MMMM YYYY, h:mm a"
@@ -14,6 +16,9 @@
             @change="(i) => setTime(i, true)"
           />
           <a-date-picker
+            :disabled="!startTimeLocal"
+            :disabled-date="disabledEndDate"
+            :disabled-time="disabledEndTime"
             class="picker"
             show-time
             placeholder="End Time"
@@ -160,7 +165,7 @@ export default {
           startTime: this.startTime,
           endTime: this.endTime,
           bookingDetails: this.getSelectionDetails,
-          locationId: this.selectedLocation ? this.selectedLocation.id : "",
+          locationId: this.selectedLocation || "",
           cb: this.createdBookings
         });
       }
@@ -173,6 +178,59 @@ export default {
     setTime(instance, isStartTime) {
       if (isStartTime) this.setStartTime(instance.format(this.backendFormat));
       else this.setEndTime(instance.format(this.backendFormat));
+    },
+
+    range(start, end) {
+      const result = [];
+      for (let i = start; i < end; i++) {
+        result.push(i);
+      }
+      return result;
+    },
+
+    disabledStartDate(current) {
+      return current && this.endTimeLocal && current > this.endTimeLocal;
+    },
+
+    disabledStartTime() {
+      if (this.endTimeLocal) {
+        const h = this.endTimeLocal.hour();
+        const m = this.endTimeLocal.minutes();
+        const s = this.endTimeLocal.seconds();
+
+        return {
+          disabledHours: () => this.range(0, 24).splice(h, 24),
+          disabledMinutes: () => this.range(0, 60).splice(m, 60),
+          disabledSeconds: () => this.range(0, 60).splice(s, 60)
+        };
+      }
+    },
+
+    disabledEndDate(current) {
+      return current && this.startTimeLocal && current < this.startTimeLocal;
+    },
+
+    disabledEndTime() {
+      if (this.startTimeLocal) {
+        let h = this.startTimeLocal.hour();
+        let m = this.startTimeLocal.minutes();
+        let s = this.startTimeLocal.seconds();
+
+        if (m < 50) {
+          m += 5;
+          s = 0;
+        } else if (h < 23) {
+          h += 1;
+          m = 0;
+          s = 0;
+        }
+
+        return {
+          disabledHours: () => this.range(0, 24).splice(0, h),
+          disabledMinutes: () => this.range(0, 60).splice(0, m),
+          disabledSeconds: () => this.range(0, 60).splice(0, s)
+        };
+      }
     }
   }
 };

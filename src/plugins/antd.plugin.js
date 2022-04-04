@@ -4,6 +4,7 @@ import "./antd.styles.less";
 
 import {
   Avatar,
+  Badge,
   Button,
   Card,
   Checkbox,
@@ -13,6 +14,7 @@ import {
   Icon,
   Input,
   Layout,
+  message,
   Radio,
   Result,
   Select,
@@ -39,7 +41,8 @@ Vue.use(Switch);
 Vue.use(Select);
 Vue.use(Spin);
 Vue.use(Result);
+Vue.use(Badge);
 
 Vue.prototype.$empty = Empty;
-// Vue.prototype.$message = message;
+Vue.prototype.$message = message;
 // Vue.prototype.$confirm = Modal.confirm;

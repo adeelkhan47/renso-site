@@ -7,12 +7,14 @@
           <h1>Renso</h1>
         </span> -->
       </div>
-      <a-button
-        type="primary"
-        shape="circle"
-        icon="shopping-cart"
-        @click="openCart"
-      />
+      <a-badge :dot="hasBag">
+        <a-button
+          type="primary"
+          shape="circle"
+          icon="shopping-cart"
+          @click="openCart"
+        />
+      </a-badge>
     </a-layout-header>
     <a-layout-content class="layout-content">
       <router-view />
@@ -22,6 +24,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+import { EXISTING_CART_ID_KEY, getIt } from "../utils/localStorage.util";
 import AppFooterLayout from "./AppFooterLayout.vue";
 
 export default {
@@ -31,7 +35,22 @@ export default {
     AppFooterLayout
   },
 
+  created() {
+    const cartId = getIt(EXISTING_CART_ID_KEY);
+    if (cartId) {
+      this.setHasBag(true);
+    }
+  },
+
+  computed: {
+    ...mapState("bookingModule", ["hasBag"])
+  },
+
   methods: {
+    ...mapActions("bookingModule", {
+      setHasBag: "setHasBag"
+    }),
+
     navigateToHome() {
       this.$router.push("/home");
     },

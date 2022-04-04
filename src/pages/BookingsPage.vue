@@ -27,23 +27,19 @@
       </div>
       <div class="page-row details">
         <span class="label"> Subtotal </span>
-        <span class="value"> € {{ subtotal }} </span>
-      </div>
-      <div class="page-row details">
-        <span class="label"> Voucher </span>
-        <span class="value"> {{ appliedVoucher }} </span>
+        <span class="value"> € {{ subtotal | price }} </span>
       </div>
       <div class="page-row details">
         <span class="label"> After Discount</span>
-        <span class="value"> € {{ totalPrice }} </span>
+        <span class="value"> € {{ totalPrice | price }} </span>
       </div>
       <div class="page-row details" v-if="taxes && taxes.length">
         <span class="label"> Taxes </span>
-        <span class="value"> € {{ totalPrice }} </span>
+        <span class="value"> € {{ totalPrice | price }} </span>
       </div>
       <div class="page-row details">
         <span class="label"> Total </span>
-        <span class="value"> € {{ finalPrice }} </span>
+        <span class="value"> € {{ finalPrice | price }} </span>
       </div>
       <div class="page-row actions">
         <a-button
@@ -97,6 +93,14 @@ export default {
     };
   },
 
+  filters: {
+    price(val) {
+      if (val && !isNaN(val)) {
+        return Number.parseFloat(val).toFixed(2);
+      } else return val;
+    }
+  },
+
   computed: {
     ...mapState("bookingModule", [
       "loading",
@@ -125,13 +129,23 @@ export default {
   methods: {
     ...mapActions("bookingModule", ["getBookings"]),
 
-    loadData() {
+    loadData(appliedVoucher = false) {
+      const self = this;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const voucher = getIt(APPLIED_VOUCHER_KEY);
       if (cartId) {
         this.getBookings({
           cartId,
-          voucher
+          voucher,
+          cb: (res) => {
+            if (appliedVoucher && res.success) {
+              if (res.data && Object.keys(res.data).length) {
+                self.$message.success("Voucher code applied");
+              } else {
+                self.$message.error("Invalid Voucher code");
+              }
+            }
+          }
         });
       }
     },
@@ -139,7 +153,7 @@ export default {
     applyVoucher() {
       saveIt(APPLIED_VOUCHER_KEY, this.voucher);
       this.voucher = "";
-      this.loadData();
+      this.loadData(true);
     },
 
     addMoreItems() {
@@ -231,6 +245,7 @@ li.booking {
 .page-row.actions {
   justify-content: flex-end;
   margin-bottom: 70px;
+  max-width: 1215px;
 }
 
 .action {
@@ -249,6 +264,7 @@ li.booking {
   font-size: 16px;
   font-weight: bold;
   margin: 2px;
+  max-width: 1215px;
 }
 
 .details .label {
