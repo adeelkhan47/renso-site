@@ -160,6 +160,7 @@ export default {
           startTime: this.startTime,
           endTime: this.endTime,
           bookingDetails: this.getSelectionDetails,
+          locationId: this.selectedLocation ? this.selectedLocation.id : "",
           cb: this.createdBookings
         });
       }

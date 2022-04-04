@@ -50,12 +50,16 @@ const bookingModule = {
         });
     },
 
-    createBookings(ctx, { startTime, endTime, bookingDetails, cb }) {
+    createBookings(
+      ctx,
+      { startTime, endTime, bookingDetails, locationId, cb }
+    ) {
       ctx.commit("LOADING", true);
       const body = {
         start_time: startTime,
         end_time: endTime,
-        bookings_details: bookingDetails
+        bookings_details: bookingDetails,
+        location_id: locationId
       };
 
       const existingCartId = getIt(EXISTING_CART_ID_KEY);
