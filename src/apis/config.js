@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "";
+const BASE_URL = "http://ec2-44-201-188-15.compute-1.amazonaws.com/api/v1";
 const PAGE_SIZE = 10;
 
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
