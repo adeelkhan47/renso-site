@@ -124,6 +124,8 @@ export default {
   mounted() {
     if (this.counter !== 1) this.loadData();
     else this.counter++;
+
+    this.voucher = getIt(APPLIED_VOUCHER_KEY);
   },
 
   methods: {
@@ -152,7 +154,6 @@ export default {
 
     applyVoucher() {
       saveIt(APPLIED_VOUCHER_KEY, this.voucher);
-      this.voucher = "";
       this.loadData(true);
     },
 

@@ -10,6 +10,7 @@
             :disabled-date="disabledStartDate"
             :disabled-time="disabledStartTime"
             show-time
+            :showNow="false"
             placeholder="Start Time"
             format="D MMMM YYYY, h:mm a"
             v-model="startTimeLocal"
@@ -21,6 +22,7 @@
             :disabled-time="disabledEndTime"
             class="picker"
             show-time
+            :showNow="false"
             placeholder="End Time"
             format="D MMMM YYYY, h:mm a"
             v-model="endTimeLocal"
@@ -76,6 +78,8 @@ import ItemSubtypesSelection from "../components/ItemSubtypesSelection.vue";
 import ItemTypeSelection from "../components/ItemTypeSelection.vue";
 import Heading from "../views/Heading.vue";
 
+const MIN_BOOKING_MINUTES = 30;
+
 export default {
   name: "HomePage",
 
@@ -123,6 +127,28 @@ export default {
         this.locationLoading ||
         this.bookingLoading
       );
+    },
+
+    isOnDifferentDates() {
+      let result = true;
+      try {
+        if (this.startTimeLocal && this.endTimeLocal) {
+          const sm = this.startTimeLocal.format("M");
+          const sd = this.startTimeLocal.format("D");
+          const sy = this.startTimeLocal.format("YYYY");
+
+          const em = this.endTimeLocal.format("M");
+          const ed = this.endTimeLocal.format("D");
+          const ey = this.endTimeLocal.format("YYYY");
+
+          const m = Number.parseInt(sm) <= Number.parseInt(em);
+          const d = Number.parseInt(sd) < Number.parseInt(ed);
+          const y = Number.parseInt(sy) <= Number.parseInt(ey);
+
+          result = m && d && y;
+        }
+      } catch (error) {}
+      return result;
     }
   },
 
@@ -193,16 +219,26 @@ export default {
     },
 
     disabledStartTime() {
-      if (this.endTimeLocal) {
-        const h = this.endTimeLocal.hour();
-        const m = this.endTimeLocal.minutes();
-        const s = this.endTimeLocal.seconds();
+      // no need to disable time
+      if (this.isOnDifferentDates) return;
 
-        return {
-          disabledHours: () => this.range(0, 24).splice(h, 24),
-          disabledMinutes: () => this.range(0, 60).splice(m, 60),
-          disabledSeconds: () => this.range(0, 60).splice(s, 60)
-        };
+      if (this.endTimeLocal) {
+        try {
+          let eh = this.endTimeLocal.hour();
+          let em = this.endTimeLocal.minutes();
+
+          if (em > MIN_BOOKING_MINUTES) {
+            em -= MIN_BOOKING_MINUTES;
+          } else if (eh < 23) {
+            eh -= 1;
+            em = em + MIN_BOOKING_MINUTES;
+          }
+
+          return {
+            disabledHours: () => this.range(0, 24).splice(eh + 1, 24),
+            disabledMinutes: () => this.range(0, 60).splice(em + 1, 60)
+          };
+        } catch (error) {}
       }
     },
 
@@ -211,25 +247,26 @@ export default {
     },
 
     disabledEndTime() {
+      // no need to disable time
+      if (this.isOnDifferentDates) return;
+
       if (this.startTimeLocal) {
-        let h = this.startTimeLocal.hour();
-        let m = this.startTimeLocal.minutes();
-        let s = this.startTimeLocal.seconds();
+        try {
+          let sh = this.startTimeLocal.hour();
+          let sm = this.startTimeLocal.minutes();
 
-        if (m < 50) {
-          m += 5;
-          s = 0;
-        } else if (h < 23) {
-          h += 1;
-          m = 0;
-          s = 0;
-        }
+          if (sm < MIN_BOOKING_MINUTES) {
+            sm += MIN_BOOKING_MINUTES;
+          } else if (sh < 23) {
+            sh += 1;
+            sm = sm - MIN_BOOKING_MINUTES;
+          }
 
-        return {
-          disabledHours: () => this.range(0, 24).splice(0, h),
-          disabledMinutes: () => this.range(0, 60).splice(0, m),
-          disabledSeconds: () => this.range(0, 60).splice(0, s)
-        };
+          return {
+            disabledHours: () => this.range(0, 24).splice(0, sh),
+            disabledMinutes: () => this.range(0, 60).splice(0, sm)
+          };
+        } catch (error) {}
       }
     }
   }
@@ -278,5 +315,10 @@ export default {
 .ant-calendar-time-picker-select-option-selected:hover,
 .ant-calendar-time-picker-select li:hover {
   color: white !important;
+}
+
+.ant-calendar-footer-btn .ant-calendar-today-btn,
+.ant-calendar-time .ant-calendar-footer .ant-calendar-today-btn {
+  display: none !important;
 }
 </style>

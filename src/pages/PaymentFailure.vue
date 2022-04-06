@@ -10,10 +10,16 @@
   </a-result>
 </template>
 <script>
+import { APPLIED_VOUCHER_KEY, removeIt } from "../utils/localStorage.util";
 export default {
   name: "PaymentFailure",
+
   data() {
     return {};
+  },
+
+  mounted() {
+    removeIt(APPLIED_VOUCHER_KEY);
   },
 
   methods: {
