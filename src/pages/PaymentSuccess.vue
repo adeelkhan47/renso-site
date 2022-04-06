@@ -10,7 +10,12 @@
   </a-result>
 </template>
 <script>
-import { EXISTING_CART_ID_KEY, removeIt } from "../utils/localStorage.util";
+import { mapActions } from "vuex";
+import {
+  APPLIED_VOUCHER_KEY,
+  EXISTING_CART_ID_KEY,
+  removeIt
+} from "../utils/localStorage.util";
 export default {
   name: "PaymentSuccess",
 
@@ -20,9 +25,13 @@ export default {
 
   mounted() {
     removeIt(EXISTING_CART_ID_KEY);
+    removeIt(APPLIED_VOUCHER_KEY);
+    this.setHasBag(false);
   },
 
   methods: {
+    ...mapActions("bookingModule", ["setHasBag"]),
+
     openHome() {
       this.$router.push("/home");
     }
