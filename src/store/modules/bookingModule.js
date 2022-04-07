@@ -15,6 +15,7 @@ const bookingModule = {
       bookings: [],
       subtotal: 0,
       totalPrice: 0,
+      taxAmount: 0,
       finalPrice: 0,
       taxes: [],
       hasBag: false
@@ -38,6 +39,7 @@ const bookingModule = {
             ctx.commit("TAXES", res.data.objects.taxs || []);
             ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
             ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
+            ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
             ctx.commit(
               "FINAL_PRICE",
               res.data.objects.actual_total_price_after_tax
@@ -143,6 +145,10 @@ const bookingModule = {
 
     TOTAL_PRICE(state, val) {
       state.totalPrice = val;
+    },
+
+    TAX_AMOUNT(state, val) {
+      state.taxAmount = val;
     },
 
     FINAL_PRICE(state, val) {

@@ -35,7 +35,7 @@
       </div>
       <div class="page-row details" v-if="taxes && taxes.length">
         <span class="label"> Taxes </span>
-        <span class="value"> € {{ totalPrice | price }} </span>
+        <span class="value"> € {{ taxAmount | price }} </span>
       </div>
       <div class="page-row details">
         <span class="label"> Total </span>
@@ -106,6 +106,7 @@ export default {
       "loading",
       "subtotal",
       "totalPrice",
+      "taxAmount",
       "finalPrice",
       "taxes"
     ]),

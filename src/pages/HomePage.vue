@@ -142,8 +142,14 @@ export default {
           const ey = this.endTimeLocal.format("YYYY");
 
           const m = Number.parseInt(sm) <= Number.parseInt(em);
-          const d = Number.parseInt(sd) < Number.parseInt(ed);
+          let d = Number.parseInt(sd) < Number.parseInt(ed);
           const y = Number.parseInt(sy) <= Number.parseInt(ey);
+
+          if (!d) {
+            d =
+              Number.parseInt(sm) < Number.parseInt(em) ||
+              Number.parseInt(sy) < Number.parseInt(ey);
+          }
 
           result = m && d && y;
         }
