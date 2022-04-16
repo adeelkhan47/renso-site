@@ -6,6 +6,7 @@
         <heading :text="$t('selectTime')" />
         <div class="pickers">
           <a-date-picker
+            :disabled="timePickerLoading || dayPickerLoading"
             class="picker"
             :disabled-date="disabledStartDate"
             :disabled-time="disabledStartTime"
@@ -17,7 +18,7 @@
             @change="(i) => setTime(i, true)"
           />
           <a-date-picker
-            :disabled="!startTimeLocal"
+            :disabled="!startTimeLocal || timePickerLoading || dayPickerLoading"
             :disabled-date="disabledEndDate"
             :disabled-time="disabledEndTime"
             class="picker"
@@ -73,6 +74,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import { dayPickerApi } from "../apis";
 import ExtrasSelection from "../components/ExtrasSelection.vue";
 import ItemSubtypesSelection from "../components/ItemSubtypesSelection.vue";
 import ItemTypeSelection from "../components/ItemTypeSelection.vue";
@@ -92,9 +94,11 @@ export default {
 
   data() {
     return {
+      dayPickerLoading: false,
       backendFormat: "YYYY-MM-DD HH:mm:ss",
       startTimeLocal: "",
-      endTimeLocal: ""
+      endTimeLocal: "",
+      dayPicker: null
     };
   },
 
@@ -107,7 +111,8 @@ export default {
     }),
 
     ...mapState("itemTypeModule", {
-      itemTypeLoading: "loading"
+      itemTypeLoading: "loading",
+      selectedItemType: "selectedItemType"
     }),
 
     ...mapState("itemSubtypeModule", {
@@ -116,6 +121,11 @@ export default {
 
     ...mapState("bookingModule", {
       bookingLoading: "loading"
+    }),
+
+    ...mapState("timePickerModule", {
+      timePickerLoading: "loading",
+      timePickers: "timePickers"
     }),
 
     ...mapGetters("itemSubtypeModule", ["canAddToCart", "getSelectionDetails"]),
@@ -155,6 +165,20 @@ export default {
         }
       } catch (error) {}
       return result;
+    },
+
+    disabledWeekdays() {
+      const disabledWeekdays = [];
+      if (this.dayPicker && Object.keys(this.dayPicker).length) {
+        if (!this.dayPicker.sunday) disabledWeekdays.push(0);
+        if (!this.dayPicker.monday) disabledWeekdays.push(1);
+        if (!this.dayPicker.tuesday) disabledWeekdays.push(2);
+        if (!this.dayPicker.wednesday) disabledWeekdays.push(3);
+        if (!this.dayPicker.thursday) disabledWeekdays.push(4);
+        if (!this.dayPicker.friday) disabledWeekdays.push(5);
+        if (!this.dayPicker.saturday) disabledWeekdays.push(6);
+      }
+      return disabledWeekdays;
     }
   },
 
@@ -173,7 +197,17 @@ export default {
         this.endTimeLocal.format(this.backendFormat) === this.endTime
       ) {
       } else this.endTimeLocal = this.endTime;
+    },
+
+    selectedItemType() {
+      if (this.selectedItemType && Object.keys(this.selectedItemType).length) {
+        this.setDayPicker(this.selectedItemType.id);
+      }
     }
+  },
+
+  created() {
+    this.initializeTimePicker();
   },
 
   mounted() {
@@ -190,6 +224,86 @@ export default {
     ...mapActions(["setStartTime", "setEndTime"]),
     ...mapActions("locationModule", ["setSelectedLocation"]),
     ...mapActions("bookingModule", ["createBookings"]),
+    ...mapActions("timePickerModule", {
+      initializeTimePicker: "init"
+    }),
+
+    getDisabledTime(weekdayNum) {
+      const hours = {};
+      const minutes = {};
+
+      if (
+        !(
+          this.dayPicker &&
+          this.dayPicker.id &&
+          this.timePickers &&
+          this.timePickers.length
+        )
+      ) {
+        return {
+          hours: [],
+          minutes: []
+        };
+      }
+
+      const dayPickerId = this.dayPicker.id;
+      const weekdays = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ];
+      const weekday = weekdays[weekdayNum];
+
+      const timePikers = this.timePickers.filter(
+        (obj) => obj.day_picker_id === dayPickerId && obj.day === weekday
+      );
+
+      if (timePikers && timePikers.length) {
+        timePikers.forEach((obj) => {
+          if (obj.start_time && obj.end_time) {
+            const startH = Number.parseInt(obj.start_time.split(":")[0]);
+            const startM = Number.parseInt(obj.start_time.split(":")[1]);
+            const endH = Number.parseInt(obj.end_time.split(":")[0]);
+            const endM = Number.parseInt(obj.end_time.split(":")[1]);
+
+            for (let h = startH; h <= endH; h++) {
+              hours[h] = true;
+            }
+
+            for (let m = startM; m <= endM; m++) {
+              minutes[m] = true;
+            }
+          }
+        });
+      }
+
+      return {
+        hours: Object.keys(hours).map((val) => Number.parseInt(val)),
+        minutes: Object.keys(minutes).map((val) => Number.parseInt(val))
+      };
+    },
+
+    setDayPicker(itemTypeId) {
+      if (!itemTypeId) return;
+      this.dayPickerLoading = true;
+      dayPickerApi
+        .getDayPickerByItemTypeId(itemTypeId)
+        .then((res) => {
+          if (res.data.objects && res.data.objects.length) {
+            this.dayPicker = res.data.objects[0];
+          } else this.dayPicker = null;
+          this.dayPickerLoading = false;
+        })
+        .catch((err) => {
+          console.error(err);
+          this.dayPicker = null;
+          this.dayPickerLoading = false;
+        });
+    },
 
     addToCart() {
       if (this.canAddToCart) {
@@ -208,8 +322,10 @@ export default {
     },
 
     setTime(instance, isStartTime) {
-      if (isStartTime) this.setStartTime(instance.format(this.backendFormat));
-      else this.setEndTime(instance.format(this.backendFormat));
+      if (isStartTime) {
+        this.setStartTime(instance.format(this.backendFormat));
+        this.setEndTime("");
+      } else this.setEndTime(instance.format(this.backendFormat));
     },
 
     range(start, end) {
@@ -221,31 +337,15 @@ export default {
     },
 
     disabledStartDate(current) {
-      return current && this.endTimeLocal && current > this.endTimeLocal;
+      return this.disabledWeekdays.includes(current.day());
     },
 
-    disabledStartTime() {
-      // no need to disable time
-      if (this.isOnDifferentDates) return;
-
-      if (this.endTimeLocal) {
-        try {
-          let eh = this.endTimeLocal.hour();
-          let em = this.endTimeLocal.minutes();
-
-          if (em > MIN_BOOKING_MINUTES) {
-            em -= MIN_BOOKING_MINUTES;
-          } else if (eh < 23) {
-            eh -= 1;
-            em = em + MIN_BOOKING_MINUTES;
-          }
-
-          return {
-            disabledHours: () => this.range(0, 24).splice(eh + 1, 24),
-            disabledMinutes: () => this.range(0, 60).splice(em + 1, 60)
-          };
-        } catch (error) {}
-      }
+    disabledStartTime(current) {
+      const disabledTimes = this.getDisabledTime(current.day());
+      return {
+        disabledHours: () => disabledTimes.hours,
+        disabledMinutes: () => disabledTimes.minutes
+      };
     },
 
     disabledEndDate(current) {

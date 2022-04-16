@@ -5,6 +5,7 @@ import itemTypeModule from "./modules/itemTypeModule";
 import itemSubtypeModule from "./modules/itemSubtypeModule";
 import bookingModule from "./modules/bookingModule";
 import locationModule from "./modules/locationModule";
+import timePickerModule from "./modules/timePickerModule";
 
 Vue.use(Vuex);
 
@@ -34,6 +35,7 @@ export default new Vuex.Store({
     itemTypeModule,
     itemSubtypeModule,
     bookingModule,
-    locationModule
+    locationModule,
+    timePickerModule
   }
 });
