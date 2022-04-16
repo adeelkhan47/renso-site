@@ -3,7 +3,7 @@
     <template>
       <item-type-selection />
       <div class="content-selection">
-        <heading text="Select Time" />
+        <heading :text="$t('selectTime')" />
         <div class="pickers">
           <a-date-picker
             class="picker"
@@ -11,7 +11,7 @@
             :disabled-time="disabledStartTime"
             show-time
             :showNow="false"
-            placeholder="Start Time"
+            :placeholder="$t('startTime')"
             format="D MMMM YYYY, h:mm a"
             v-model="startTimeLocal"
             @change="(i) => setTime(i, true)"
@@ -23,7 +23,7 @@
             class="picker"
             show-time
             :showNow="false"
-            placeholder="End Time"
+            :placeholder="$t('endTime')"
             format="D MMMM YYYY, h:mm a"
             v-model="endTimeLocal"
             @change="(i) => setTime(i, false)"
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="content-selection">
-        <heading text="Select Location" />
+        <heading :text="$t('selectLocation')" />
         <div class="pickers">
           <a-select
             :default-value="selectedLocation"
@@ -59,7 +59,7 @@
           :disabled="loading || !canAddToCart"
           @click="addToCart"
         >
-          Add to Cart
+          {{ $t("addToCart") }}
         </a-button>
       </div>
     </template>

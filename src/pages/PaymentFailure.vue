@@ -1,11 +1,11 @@
 <template>
   <a-result
     status="error"
-    title="Payment Failed"
-    sub-title="Unable to complete order payment."
+    :title="$t('paymentFailed')"
+    :sub-title="$t('unableToCompleteOrderPayment')"
   >
     <template #extra>
-      <a-button type="primary" @click="openHome"> Go Home </a-button>
+      <a-button type="primary" @click="openHome"> {{ $t("goHome") }} </a-button>
     </template>
   </a-result>
 </template>

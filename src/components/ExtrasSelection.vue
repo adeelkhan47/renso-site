@@ -1,6 +1,6 @@
 <template>
   <div class="extras-selection">
-    <heading text="Extras" />
+    <heading :text="$t('extras')" />
     <ul class="extras" v-if="extras && extras.length">
       <li class="extra" v-for="itemSubtype of extras" :key="itemSubtype.id">
         <item-subtype-selection :itemSubtypeRaw="itemSubtype" />

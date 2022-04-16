@@ -14,31 +14,31 @@
 
       <div class="page-row details">
         <a-input-search
-          placeholder="Voucher Code"
+          :placeholder="$t('voucherCode')"
           size="large"
-          v-model="voucher"
           class="discount"
+          v-model="voucher"
           @search="applyVoucher"
         >
           <a-button slot="enterButton" type="primary" icon="tags">
-            Apply Voucher
+            {{ $t("applyVoucher") }}
           </a-button>
         </a-input-search>
       </div>
       <div class="page-row details">
-        <span class="label"> Subtotal </span>
+        <span class="label"> {{ $t("subtotal") }} </span>
         <span class="value"> € {{ subtotal | price }} </span>
       </div>
       <div class="page-row details">
-        <span class="label"> After Discount</span>
+        <span class="label"> {{ $t("afterDiscount") }} </span>
         <span class="value"> € {{ totalPrice | price }} </span>
       </div>
       <div class="page-row details" v-if="taxes && taxes.length">
-        <span class="label"> Taxes </span>
+        <span class="label"> {{ $t("taxes") }} </span>
         <span class="value"> € {{ taxAmount | price }} </span>
       </div>
       <div class="page-row details">
-        <span class="label"> Total </span>
+        <span class="label"> {{ $t("total") }} </span>
         <span class="value"> € {{ finalPrice | price }} </span>
       </div>
       <div class="page-row actions">
@@ -48,7 +48,7 @@
           icon="shopping"
           @click="addMoreItems"
         >
-          Add More Items
+          {{ $t("addMoreItems") }}
         </a-button>
         <a-button
           type="primary"
@@ -58,7 +58,7 @@
           :disabled="loading || !(bookings && bookings.length)"
           @click="checkout"
         >
-          Checkout
+          {{ $t("checkout") }}
         </a-button>
       </div>
     </template>
@@ -143,9 +143,9 @@ export default {
           cb: (res) => {
             if (appliedVoucher && res.success) {
               if (res.data && Object.keys(res.data).length) {
-                self.$message.success("Voucher code applied");
+                self.$message.success(self.$t("voucherCodeApplied"));
               } else {
-                self.$message.error("Invalid Voucher code");
+                self.$message.error(self.$t("invalidVoucherCode"));
               }
             }
           }

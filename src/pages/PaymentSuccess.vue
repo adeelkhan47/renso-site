@@ -1,11 +1,11 @@
 <template>
   <a-result
     status="success"
-    title="Order placed!"
-    sub-title="Successfully completed order."
+    :title="$t('orderPlaced')"
+    :sub-title="$t('successfullyCompletedOrder')"
   >
     <template #extra>
-      <a-button type="primary" @click="openHome"> Go Home </a-button>
+      <a-button type="primary" @click="openHome"> {{ $t("goHome") }} </a-button>
     </template>
   </a-result>
 </template>

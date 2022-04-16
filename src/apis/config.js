@@ -1,9 +1,12 @@
 import axios from "axios";
 
 const BASE_URL = "http://ec2-44-201-188-15.compute-1.amazonaws.com/api/v1";
+// const BASE_URL = "https://fed3-180-178-189-110.ngrok.io/api/v1";
 const PAGE_SIZE = 10;
 
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+axios.defaults.headers.common.Authorization =
+  "c45af3ea8ad38c4f8cbc900133cb432c";
 
 function configureApis(Vue) {
   Vue.prototype.$extractErrorMsg = function (

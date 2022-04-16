@@ -2,7 +2,10 @@
   <div class="item-type-tile">
     <a-card class="item-type-tile-card">
       <a-avatar shape="square" :size="110" :src="itemType.image" />
-      <a-statistic :title="'Category #' + itemType.id" :value="itemType.name">
+      <a-statistic
+        :title="$t('category') + ' #' + itemType.id"
+        :value="itemType.name"
+      >
       </a-statistic>
     </a-card>
   </div>

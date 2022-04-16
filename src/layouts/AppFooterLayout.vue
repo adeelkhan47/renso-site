@@ -17,7 +17,9 @@
         </li>
       </ul>
     </div>
-    <div class="footer-bottom-line">Renso ©2022 Created by Renso Corp.</div>
+    <div class="footer-bottom-line">
+      Renso ©2022 {{ $t("createdByRensoCorp") }}.
+    </div>
   </div>
 </template>
 

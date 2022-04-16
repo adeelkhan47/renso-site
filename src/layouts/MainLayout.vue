@@ -7,14 +7,21 @@
           <h1>Renso</h1>
         </span> -->
       </div>
-      <a-badge :dot="hasBag">
-        <a-button
-          type="primary"
-          shape="circle"
-          icon="shopping-cart"
-          @click="openCart"
-        />
-      </a-badge>
+      <ul class="actions">
+        <li class="action">
+          <language-switch></language-switch>
+        </li>
+        <li class="action">
+          <a-badge :dot="hasBag">
+            <a-button
+              type="primary"
+              shape="circle"
+              icon="shopping-cart"
+              @click="openCart"
+            />
+          </a-badge>
+        </li>
+      </ul>
     </a-layout-header>
     <a-layout-content class="layout-content">
       <router-view />
@@ -25,6 +32,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import LanguageSwitch from "../components/LanguageSwitch.vue";
 import { EXISTING_CART_ID_KEY, getIt } from "../utils/localStorage.util";
 import AppFooterLayout from "./AppFooterLayout.vue";
 
@@ -32,7 +40,8 @@ export default {
   name: "MainLayout",
 
   components: {
-    AppFooterLayout
+    AppFooterLayout,
+    LanguageSwitch
   },
 
   created() {
@@ -130,5 +139,19 @@ export default {
   .main-layout .layout-content {
     padding: 0 20px;
   }
+}
+
+.actions {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.action {
+  margin-left: 15px;
 }
 </style>

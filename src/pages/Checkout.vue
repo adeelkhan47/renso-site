@@ -12,7 +12,11 @@
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
         >
-          <a-form-model-item ref="client_name" label="Name" prop="client_name">
+          <a-form-model-item
+            ref="client_name"
+            :label="$t('name')"
+            prop="client_name"
+          >
             <a-input
               v-model="form.client_name"
               @blur="
@@ -22,7 +26,7 @@
               "
             />
           </a-form-model-item>
-          <a-form-model-item label="Email" prop="client_email">
+          <a-form-model-item :label="$t('email')" prop="client_email">
             <a-input
               type="email"
               v-model="form.client_email"
@@ -33,7 +37,7 @@
               "
             />
           </a-form-model-item>
-          <a-form-model-item label="Phone number" prop="phone_number">
+          <a-form-model-item :label="$t('phoneNumber')" prop="phone_number">
             <a-input
               v-model="form.phone_number"
               @blur="
@@ -57,7 +61,7 @@
           </template>
           <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
             <a-button icon="redo" class="action" @click="resetForm">
-              Reset
+              {{ $t("reset") }}
             </a-button>
             <a-button
               type="primary"
@@ -67,7 +71,7 @@
               :disabled="!isReady"
               @click="onSubmit"
             >
-              Pay
+              {{ $t("pay") }}
             </a-button>
           </a-form-model-item>
         </a-form-model>
@@ -110,24 +114,24 @@ export default {
         client_name: [
           {
             required: true,
-            message: "Please input your name",
+            message: this.$t("nameIsRequired"),
             trigger: "blur"
           }
         ],
         client_email: [
           {
             type: "email",
-            message: "The input is not valid E-mail!"
+            message: this.$t("invalidEmail")
           },
           {
             required: true,
-            message: "Please input your E-mail!"
+            message: this.$t("emailIsRequired")
           }
         ],
         phone_number: [
           {
             required: true,
-            message: "Please input your contact number",
+            message: this.$t("phoneNumberIsRequired"),
             trigger: "blur"
           }
         ]

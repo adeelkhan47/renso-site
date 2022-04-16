@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   Checkbox,
+  ConfigProvider,
   DatePicker,
   Empty,
   FormModel,
@@ -42,6 +43,7 @@ Vue.use(Select);
 Vue.use(Spin);
 Vue.use(Result);
 Vue.use(Badge);
+Vue.use(ConfigProvider);
 
 Vue.prototype.$empty = Empty;
 Vue.prototype.$message = message;
