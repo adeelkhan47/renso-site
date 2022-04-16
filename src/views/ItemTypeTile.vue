@@ -1,12 +1,8 @@
 <template>
   <div class="item-type-tile">
     <a-card class="item-type-tile-card">
-      <a-avatar shape="square" :size="110" :src="itemType.image" />
-      <a-statistic
-        :title="$t('category') + ' #' + itemType.id"
-        :value="itemType.name"
-      >
-      </a-statistic>
+      <a-avatar shape="square" :size="150" :src="itemType.image" />
+      <a-statistic class="statistics" :value="itemType.name"> </a-statistic>
     </a-card>
   </div>
 </template>
@@ -29,10 +25,30 @@ export default {
   padding: 3px;
   cursor: pointer;
 }
+
+.item-type-tile-card {
+  max-width: 175px;
+}
+
+.item-type-tile-card .statistics {
+  width: 100%;
+  font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
 
 <style>
 .item-type-tile-card .ant-card-body {
-  padding: 15px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item-type-tile-card .statistics .ant-statistic-content {
+  font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
