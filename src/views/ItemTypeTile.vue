@@ -1,7 +1,7 @@
 <template>
   <div class="item-type-tile">
     <a-card class="item-type-tile-card">
-      <a-avatar shape="square" :size="150" :src="itemType.image" />
+      <a-avatar shape="square" :size="160" :src="itemType.image" />
       <a-statistic class="statistics" :value="itemType.name"> </a-statistic>
     </a-card>
   </div>
@@ -27,7 +27,7 @@ export default {
 }
 
 .item-type-tile-card {
-  max-width: 175px;
+  max-width: 180px;
 }
 
 .item-type-tile-card .statistics {
