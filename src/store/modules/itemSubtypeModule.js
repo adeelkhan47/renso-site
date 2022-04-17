@@ -74,7 +74,7 @@ const itemSubtypeModule = {
     getExtraSubtypes(ctx, { locationId, extraTypeId, startTime, endTime }) {
       ctx.commit("LOADING_EX", true);
       itemSubtypeApi
-        .getItemSubtypes(locationId, extraTypeId, startTime, endTime)
+        .getExtraItemSubtypes(locationId, extraTypeId, startTime, endTime)
         .then((res) => {
           if (res && res.data) {
             ctx.commit("EXTRAS", res.data.objects);

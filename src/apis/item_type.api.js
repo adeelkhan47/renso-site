@@ -7,15 +7,13 @@ function getItemTypes() {
   return axios.get(BASE_URL + "/item_type/for_current_season");
 }
 
-function getAllItemTypes() {
-  if (FAKE_API.USE_FAKE) return FAKE_API.getItemTypes();
-
-  return axios.get(BASE_URL + "/item_type");
+function getExtraItemTypes() {
+  return axios.get(BASE_URL + "/item_type?name:eq=Extra");
 }
 
 const itemTypeApi = {
   getItemTypes,
-  getAllItemTypes
+  getExtraItemTypes
 };
 
 export default itemTypeApi;
