@@ -31,11 +31,16 @@ export default {
   },
 
   created() {
+    this.initializeAppSettings();
     this.initializeItemTypesModule();
     this.initializeLocations();
   },
 
   methods: {
+    ...mapActions("appSettingModule", {
+      initializeAppSettings: "init"
+    }),
+
     ...mapActions("itemTypeModule", {
       initializeItemTypesModule: "init"
     }),
