@@ -12,33 +12,37 @@
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
         >
-          <a-form-model-item ref="client_name" label="Name" prop="client_name">
+          <a-form-model-item
+            ref="client_name"
+            :label="$t('name')"
+            prop="client_name"
+          >
             <a-input
               v-model="form.client_name"
               @blur="
                 () => {
-                  $refs.client_name.onFieldBlur();
+                  $refs.client_name ? $refs.client_name.onFieldBlur() : '';
                 }
               "
             />
           </a-form-model-item>
-          <a-form-model-item label="Email" prop="client_email">
+          <a-form-model-item :label="$t('email')" prop="client_email">
             <a-input
               type="email"
               v-model="form.client_email"
               @blur="
                 () => {
-                  $refs.client_email.onFieldBlur();
+                  $refs.client_email ? $refs.client_email.onFieldBlur() : '';
                 }
               "
             />
           </a-form-model-item>
-          <a-form-model-item label="Phone number" prop="phone_number">
+          <a-form-model-item :label="$t('phoneNumber')" prop="phone_number">
             <a-input
               v-model="form.phone_number"
               @blur="
                 () => {
-                  $refs.phone_number.onFieldBlur();
+                  $refs.phone_number ? $refs.phone_number.onFieldBlur() : '';
                 }
               "
             />
@@ -51,13 +55,23 @@
               v-for="fieldObj of extraFields"
               :key="fieldObj.id"
               :label="fieldObj.name"
+              :prop="fieldObj.name"
             >
-              <a-input v-model="form[fieldObj.name]" />
+              <a-input
+                v-model="form[fieldObj.name]"
+                @blur="
+                  () => {
+                    $refs[fieldObj.name]
+                      ? $refs[fieldObj.name].onFieldBlur()
+                      : '';
+                  }
+                "
+              />
             </a-form-model-item>
           </template>
           <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
             <a-button icon="redo" class="action" @click="resetForm">
-              Reset
+              {{ $t("reset") }}
             </a-button>
             <a-button
               type="primary"
@@ -67,7 +81,7 @@
               :disabled="!isReady"
               @click="onSubmit"
             >
-              Pay
+              {{ $t("pay") }}
             </a-button>
           </a-form-model-item>
         </a-form-model>
@@ -110,24 +124,24 @@ export default {
         client_name: [
           {
             required: true,
-            message: "Please input your name",
+            message: this.$t("nameIsRequired"),
             trigger: "blur"
           }
         ],
         client_email: [
           {
             type: "email",
-            message: "The input is not valid E-mail!"
+            message: this.$t("invalidEmail")
           },
           {
             required: true,
-            message: "Please input your E-mail!"
+            message: this.$t("emailIsRequired")
           }
         ],
         phone_number: [
           {
             required: true,
-            message: "Please input your contact number",
+            message: this.$t("phoneNumberIsRequired"),
             trigger: "blur"
           }
         ]
@@ -146,6 +160,39 @@ export default {
     }
   },
 
+  watch: {
+    "$i18n.locale": function () {
+      this.rules = {
+        client_name: [
+          {
+            required: true,
+            message: this.$t("nameIsRequired"),
+            trigger: "blur"
+          }
+        ],
+        client_email: [
+          {
+            type: "email",
+            message: this.$t("invalidEmail")
+          },
+          {
+            required: true,
+            message: this.$t("emailIsRequired")
+          }
+        ],
+        phone_number: [
+          {
+            required: true,
+            message: this.$t("phoneNumberIsRequired"),
+            trigger: "blur"
+          }
+        ]
+      };
+      this.setAdditionalRules();
+      this.resetForm();
+    }
+  },
+
   created() {
     this.loading = true;
     orderApi
@@ -153,6 +200,7 @@ export default {
       .then((res) => {
         if (res && res.data && res.data.objects && res.data.objects.length) {
           this.extraFields = res.data.objects;
+          this.setAdditionalRules();
         }
         this.loading = false;
       })
@@ -163,6 +211,22 @@ export default {
   },
 
   methods: {
+    setAdditionalRules() {
+      if (this.extraFields && this.extraFields.length) {
+        this.extraFields.forEach((field) => {
+          if (field.mandatory) {
+            this.rules[field.name] = [
+              {
+                required: true,
+                message: this.$t("valueIsRequired"),
+                trigger: "blur"
+              }
+            ];
+          }
+        });
+      }
+    },
+
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -172,9 +236,11 @@ export default {
         }
       });
     },
+
     resetForm() {
       this.$refs.ruleForm.resetFields();
     },
+
     createOrder() {
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);

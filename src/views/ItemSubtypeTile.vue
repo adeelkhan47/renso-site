@@ -3,7 +3,7 @@
     <div class="content">
       <a-avatar class="description" :size="60" :src="itemSubtype.image" />
       <a-statistic
-        title="Sub-Category name"
+        :title="$t('subcategoryName')"
         :value="itemSubtype.name"
         class="description name"
       />
@@ -19,7 +19,7 @@
         </template>
       </a-statistic> -->
       <a-statistic
-        title="Person Count"
+        :title="$t('personCount')"
         :value="itemSubtype.person || 0"
         class="description"
       >

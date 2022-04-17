@@ -35,7 +35,7 @@ const itemTypeModule = {
         });
 
       itemTypeApi
-        .getAllItemTypes()
+        .getExtraItemTypes()
         .then((res) => {
           if (res && res.data) {
             const types = res.data.objects;

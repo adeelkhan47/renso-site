@@ -1,6 +1,6 @@
 <template>
   <div class="item-subtypes-selection">
-    <heading text="Available Items" />
+    <heading :text="$t('availableItems')" />
     <ul class="item-subtypes" v-if="itemSubtypes && itemSubtypes.length">
       <li
         class="item-subtype"

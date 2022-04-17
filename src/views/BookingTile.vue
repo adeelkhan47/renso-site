@@ -4,22 +4,22 @@
       <div class="row">
         <a-avatar class="block" :size="55" :src="booking.item.image" />
         <a-statistic
-          title="Item name"
+          :title="$t('itemName')"
           :value="booking.item.name"
           class="block space-1"
         />
         <a-statistic
-          title="Sub-Category"
+          :title="$t('subcategory')"
           :value="booking.item.item_subtype.name"
           class="block space-3"
         />
         <a-statistic
-          title="Category"
+          :title="$t('category')"
           :value="booking.item.item_type.name"
           class="block space-2"
         />
         <a-statistic
-          title="location"
+          :title="$t('location')"
           :value="location(booking)"
           class="block space-2"
         >
@@ -29,12 +29,12 @@
         </a-statistic>
 
         <a-statistic
-          title="Start Time"
+          :title="$t('startTime')"
           :value="time(booking.start_time)"
           class="block space-3 time"
         />
         <a-statistic
-          title="End Time"
+          :title="$t('endTime')"
           :value="time(booking.end_time)"
           class="block space-3"
         />

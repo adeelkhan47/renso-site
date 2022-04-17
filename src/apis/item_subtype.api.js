@@ -17,8 +17,25 @@ function getItemSubtypes(locationId, itemTypeId, startTime, endTime) {
   );
 }
 
+function getExtraItemSubtypes(locationId, itemTypeId, startTime, endTime) {
+  if (FAKE_API.USE_FAKE) return FAKE_API.getItemSubtypes();
+
+  return axios.get(
+    BASE_URL +
+      "/item_subtype/extra_available?location_id=" +
+      locationId +
+      "&item_type_id=" +
+      itemTypeId +
+      "&start_time=" +
+      startTime +
+      "&end_time=" +
+      endTime
+  );
+}
+
 const itemSubtypeApi = {
-  getItemSubtypes
+  getItemSubtypes,
+  getExtraItemSubtypes
 };
 
 export default itemSubtypeApi;

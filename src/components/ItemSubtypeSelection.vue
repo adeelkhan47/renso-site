@@ -14,7 +14,7 @@
         @click="remove"
       />
       <a-statistic
-        title="Select Quantity"
+        :title="$t('selectQuantity')"
         :value="quantity"
         class="quantity-detail"
       >

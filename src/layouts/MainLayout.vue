@@ -2,19 +2,26 @@
   <a-layout class="main-layout">
     <a-layout-header class="layout-header">
       <div class="logo-wrapper" @click="navigateToHome">
-        <img class="logo-img" src="../assets/logo.png" alt="Logo" />
-        <!-- <span class="logo-text">
-          <h1>Renso</h1>
-        </span> -->
+        <img class="logo-img" :src="logoUrl" alt="Logo" v-if="logoUrl" />
+        <span class="logo-text" v-else>
+          <h1>Logo</h1>
+        </span>
       </div>
-      <a-badge :dot="hasBag">
-        <a-button
-          type="primary"
-          shape="circle"
-          icon="shopping-cart"
-          @click="openCart"
-        />
-      </a-badge>
+      <ul class="actions">
+        <li class="action">
+          <language-switch></language-switch>
+        </li>
+        <li class="action">
+          <a-badge :dot="hasBag">
+            <a-button
+              type="primary"
+              shape="circle"
+              icon="shopping-cart"
+              @click="openCart"
+            />
+          </a-badge>
+        </li>
+      </ul>
     </a-layout-header>
     <a-layout-content class="layout-content">
       <router-view />
@@ -24,7 +31,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
+import LanguageSwitch from "../components/LanguageSwitch.vue";
 import { EXISTING_CART_ID_KEY, getIt } from "../utils/localStorage.util";
 import AppFooterLayout from "./AppFooterLayout.vue";
 
@@ -32,7 +40,8 @@ export default {
   name: "MainLayout",
 
   components: {
-    AppFooterLayout
+    AppFooterLayout,
+    LanguageSwitch
   },
 
   created() {
@@ -43,7 +52,8 @@ export default {
   },
 
   computed: {
-    ...mapState("bookingModule", ["hasBag"])
+    ...mapState("bookingModule", ["hasBag"]),
+    ...mapGetters("appSettingModule", ["logoUrl"])
   },
 
   methods: {
@@ -108,8 +118,8 @@ export default {
   text-align: left;
   width: 100px;
   line-height: 1;
-  display: inline-block;
-  color: #009ce6;
+  display: block;
+  color: black;
   font-size: 25px;
   margin: 0px;
   padding: 0px;
@@ -130,5 +140,19 @@ export default {
   .main-layout .layout-content {
     padding: 0 20px;
   }
+}
+
+.actions {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.action {
+  margin-left: 15px;
 }
 </style>

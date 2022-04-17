@@ -1,21 +1,46 @@
 <template>
   <div id="app">
-    <router-view />
+    <a-config-provider :locale="locale">
+      <router-view />
+    </a-config-provider>
   </div>
 </template>
 
 <script>
+import enUS from "ant-design-vue/es/locale/en_US";
+import deDE from "ant-design-vue/es/locale/de_DE";
 import { mapActions } from "vuex";
 
 export default {
   name: "App",
 
+  computed: {
+    locale() {
+      let temp = "";
+      switch (this.$i18n.locale) {
+        case "de":
+          temp = deDE;
+          break;
+
+        default:
+          temp = enUS;
+          break;
+      }
+      return temp;
+    }
+  },
+
   created() {
+    this.initializeAppSettings();
     this.initializeItemTypesModule();
     this.initializeLocations();
   },
 
   methods: {
+    ...mapActions("appSettingModule", {
+      initializeAppSettings: "init"
+    }),
+
     ...mapActions("itemTypeModule", {
       initializeItemTypesModule: "init"
     }),
