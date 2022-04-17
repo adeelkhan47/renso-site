@@ -37,5 +37,6 @@
     "invalidEmail": "Invalid email",
     "emailIsRequired": "Email is required",
     "phoneNumberIsRequired": "Phone number is required",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "valueIsRequired": "Value is required"
 }

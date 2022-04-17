@@ -37,5 +37,6 @@
     "invalidEmail": "Ungültige E-Mail",
     "emailIsRequired": "E-Mail ist erforderlich",
     "phoneNumberIsRequired": "Telefonnummer ist erforderlich",
-    "checkout": "Kasse"
+    "checkout": "Kasse",
+    "valueIsRequired": "Wert erforderlich"
 }

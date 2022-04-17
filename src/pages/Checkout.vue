@@ -21,7 +21,7 @@
               v-model="form.client_name"
               @blur="
                 () => {
-                  $refs.client_name.onFieldBlur();
+                  $refs.client_name ? $refs.client_name.onFieldBlur() : '';
                 }
               "
             />
@@ -32,7 +32,7 @@
               v-model="form.client_email"
               @blur="
                 () => {
-                  $refs.client_email.onFieldBlur();
+                  $refs.client_email ? $refs.client_email.onFieldBlur() : '';
                 }
               "
             />
@@ -42,7 +42,7 @@
               v-model="form.phone_number"
               @blur="
                 () => {
-                  $refs.phone_number.onFieldBlur();
+                  $refs.phone_number ? $refs.phone_number.onFieldBlur() : '';
                 }
               "
             />
@@ -55,8 +55,18 @@
               v-for="fieldObj of extraFields"
               :key="fieldObj.id"
               :label="fieldObj.name"
+              :prop="fieldObj.name"
             >
-              <a-input v-model="form[fieldObj.name]" />
+              <a-input
+                v-model="form[fieldObj.name]"
+                @blur="
+                  () => {
+                    $refs[fieldObj.name]
+                      ? $refs[fieldObj.name].onFieldBlur()
+                      : '';
+                  }
+                "
+              />
             </a-form-model-item>
           </template>
           <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
@@ -150,6 +160,39 @@ export default {
     }
   },
 
+  watch: {
+    "$i18n.locale": function () {
+      this.rules = {
+        client_name: [
+          {
+            required: true,
+            message: this.$t("nameIsRequired"),
+            trigger: "blur"
+          }
+        ],
+        client_email: [
+          {
+            type: "email",
+            message: this.$t("invalidEmail")
+          },
+          {
+            required: true,
+            message: this.$t("emailIsRequired")
+          }
+        ],
+        phone_number: [
+          {
+            required: true,
+            message: this.$t("phoneNumberIsRequired"),
+            trigger: "blur"
+          }
+        ]
+      };
+      this.setAdditionalRules();
+      this.resetForm();
+    }
+  },
+
   created() {
     this.loading = true;
     orderApi
@@ -157,6 +200,7 @@ export default {
       .then((res) => {
         if (res && res.data && res.data.objects && res.data.objects.length) {
           this.extraFields = res.data.objects;
+          this.setAdditionalRules();
         }
         this.loading = false;
       })
@@ -167,6 +211,22 @@ export default {
   },
 
   methods: {
+    setAdditionalRules() {
+      if (this.extraFields && this.extraFields.length) {
+        this.extraFields.forEach((field) => {
+          if (field.mandatory) {
+            this.rules[field.name] = [
+              {
+                required: true,
+                message: this.$t("valueIsRequired"),
+                trigger: "blur"
+              }
+            ];
+          }
+        });
+      }
+    },
+
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -176,9 +236,11 @@ export default {
         }
       });
     },
+
     resetForm() {
       this.$refs.ruleForm.resetFields();
     },
+
     createOrder() {
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);
