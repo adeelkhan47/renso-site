@@ -27,7 +27,7 @@ export default {
   computed: {
     ...mapState(["startTime", "endTime"]),
     ...mapState("locationModule", ["selectedLocation"]),
-    ...mapState("itemTypeModule", ["extraItemType"]),
+    ...mapState("itemTypeModule", ["extraItemType", "selectedItemType"]),
     ...mapState("itemSubtypeModule", ["extras"])
   },
 
@@ -58,14 +58,14 @@ export default {
     loadExtras() {
       if (
         this.selectedLocation &&
-        this.extraItemType &&
-        this.extraItemType.id &&
+        this.selectedItemType &&
+        this.selectedItemType.id &&
         this.startTime &&
         this.endTime
       ) {
         this.getExtraSubtypes({
           locationId: this.selectedLocation,
-          extraTypeId: this.extraItemType.id,
+          itemTypeId: this.selectedItemType.id,
           startTime: this.startTime,
           endTime: this.endTime
         });

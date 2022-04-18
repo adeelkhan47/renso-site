@@ -22,7 +22,7 @@ export default {
 
   data() {
     return {
-      selectedLang: "de",
+      selectedLang: "en",
       langs: [
         {
           label: "En",
