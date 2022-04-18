@@ -162,7 +162,7 @@ export default {
       }
     },
 
-    getDisabledTime(weekdayNum) {
+    getDisabledTime(weekdayNum, current) {
       const hours = {};
       const minutes = {};
 
@@ -204,12 +204,28 @@ export default {
             const endH = Number.parseInt(obj.end_time.split(":")[0]);
             const endM = Number.parseInt(obj.end_time.split(":")[1]);
 
-            for (let h = startH; h <= endH; h++) {
+            const cH = current.hour();
+
+            // Disabling hours
+            for (let h = startH + 1; h < endH; h++) {
               hours[h] = true;
             }
 
-            for (let m = startM; m <= endM; m++) {
-              minutes[m] = true;
+            // Disabling minutes
+            if (startH <= cH && endH >= cH) {
+              if (cH === startH) {
+                for (let m = startM; m < 60; m++) {
+                  minutes[m] = true;
+                }
+              } else if (cH === endH) {
+                for (let m = 0; m <= endM; m++) {
+                  minutes[m] = true;
+                }
+              } else {
+                for (let m = 0; m < 60; m++) {
+                  minutes[m] = true;
+                }
+              }
             }
           }
         });
@@ -251,9 +267,9 @@ export default {
 
     disabledStartTime(current) {
       if (current) {
-        const disabledTimes = this.getDisabledTime(current.day());
+        const disabledTimes = this.getDisabledTime(current.day(), current);
         return {
-          disabledHours: () => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // disabledTimes.hours,
+          disabledHours: () => disabledTimes.hours,
           disabledMinutes: () => disabledTimes.minutes
         };
       }
