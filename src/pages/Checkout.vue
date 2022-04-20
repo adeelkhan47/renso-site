@@ -242,6 +242,7 @@ export default {
     },
 
     createOrder() {
+      const self = this;
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
@@ -254,10 +255,14 @@ export default {
         })
         .then((res) => {
           const sessionId = res.data.objects.session_id;
-          // eslint-disable-next-line no-undef
-          const stripe = new Stripe(STRIPE_PUBLIC_KEY);
           this.loading = false;
-          stripe.redirectToCheckout({ sessionId: sessionId });
+          if (!sessionId) {
+            self.$router.push("/success");
+          } else {
+            // eslint-disable-next-line no-undef
+            const stripe = new Stripe(STRIPE_PUBLIC_KEY);
+            stripe.redirectToCheckout({ sessionId: sessionId });
+          }
         })
         .catch((err) => {
           console.error(err);

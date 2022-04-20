@@ -127,6 +127,10 @@ const bookingModule = {
 
     setHasBag(ctx, val) {
       ctx.commit("HAS_BAG", val);
+    },
+
+    reset(ctx) {
+      ctx.commit("RESET");
     }
   },
 
@@ -161,6 +165,16 @@ const bookingModule = {
 
     HAS_BAG(state, val) {
       state.hasBag = val;
+    },
+
+    RESET(state) {
+      state.bookings = [];
+      state.subtotal = 0;
+      state.totalPrice = 0;
+      state.taxAmount = 0;
+      state.finalPrice = 0;
+      state.taxes = [];
+      state.hasBag = false;
     }
   }
 };
