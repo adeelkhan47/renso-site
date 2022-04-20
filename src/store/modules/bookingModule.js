@@ -18,6 +18,7 @@ const bookingModule = {
       taxAmount: 0,
       finalPrice: 0,
       taxes: [],
+      privacyPolicyLink: "",
       hasBag: false
     };
   },
@@ -40,6 +41,10 @@ const bookingModule = {
             ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
             ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
             ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
+            ctx.commit(
+              "PRIVACY_POLICY_LINK",
+              res.data.objects.privacy_policy_link || ""
+            );
             ctx.commit(
               "FINAL_PRICE",
               res.data.objects.actual_total_price_after_tax
@@ -161,6 +166,10 @@ const bookingModule = {
 
     TAXES(state, val) {
       state.taxes = val;
+    },
+
+    PRIVACY_POLICY_LINK(state, val) {
+      state.privacyPolicyLink = val;
     },
 
     HAS_BAG(state, val) {

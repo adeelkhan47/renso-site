@@ -38,5 +38,6 @@
     "emailIsRequired": "Email is required",
     "phoneNumberIsRequired": "Phone number is required",
     "checkout": "Checkout",
-    "valueIsRequired": "Value is required"
+    "valueIsRequired": "Value is required",
+    "acceptPrivacyPolicy": "Accept Privacy Policy"
 }
