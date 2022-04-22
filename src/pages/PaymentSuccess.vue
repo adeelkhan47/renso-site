@@ -26,11 +26,12 @@ export default {
   mounted() {
     removeIt(EXISTING_CART_ID_KEY);
     removeIt(APPLIED_VOUCHER_KEY);
-    this.setHasBag(false);
+
+    this.reset();
   },
 
   methods: {
-    ...mapActions("bookingModule", ["setHasBag"]),
+    ...mapActions("bookingModule", ["reset"]),
 
     openHome() {
       this.$router.push("/home");

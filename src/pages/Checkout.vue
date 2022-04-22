@@ -69,6 +69,16 @@
               />
             </a-form-model-item>
           </template>
+          <a-form-model-item
+            :wrapper-col="actionWrapCol"
+            v-if="privacyPolicyLink"
+          >
+            <a-checkbox v-model="privacy">
+              <a :href="privacyPolicyLink" target="blank">
+                {{ $t("acceptPrivacyPolicy") }}
+              </a>
+            </a-checkbox>
+          </a-form-model-item>
           <a-form-model-item :wrapper-col="actionWrapCol" class="actions">
             <a-button icon="redo" class="action" @click="resetForm">
               {{ $t("reset") }}
@@ -78,7 +88,7 @@
               style="margin-left: 10px"
               icon="credit-card"
               class="action"
-              :disabled="!isReady"
+              :disabled="!isReady || (!privacy && privacyPolicyLink)"
               @click="onSubmit"
             >
               {{ $t("pay") }}
@@ -97,6 +107,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { orderApi } from "../apis";
 import {
   APPLIED_VOUCHER_KEY,
@@ -110,6 +121,7 @@ export default {
 
   data() {
     return {
+      privacy: false,
       loading: false,
       labelCol: { sm: {}, md: { span: 8 } },
       wrapperCol: { sm: {}, md: { span: 10 } },
@@ -151,6 +163,8 @@ export default {
   },
 
   computed: {
+    ...mapState("bookingModule", ["privacyPolicyLink"]),
+
     isReady() {
       return !!(
         this.form.client_name &&
@@ -242,6 +256,7 @@ export default {
     },
 
     createOrder() {
+      const self = this;
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
@@ -254,10 +269,14 @@ export default {
         })
         .then((res) => {
           const sessionId = res.data.objects.session_id;
-          // eslint-disable-next-line no-undef
-          const stripe = new Stripe(STRIPE_PUBLIC_KEY);
           this.loading = false;
-          stripe.redirectToCheckout({ sessionId: sessionId });
+          if (!sessionId) {
+            self.$router.push("/success");
+          } else {
+            // eslint-disable-next-line no-undef
+            const stripe = new Stripe(STRIPE_PUBLIC_KEY);
+            stripe.redirectToCheckout({ sessionId: sessionId });
+          }
         })
         .catch((err) => {
           console.error(err);
