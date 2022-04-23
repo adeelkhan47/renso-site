@@ -2,7 +2,7 @@
   <div class="app-footer-layout-wrapper">
     <div class="footer-main-body">
       <p>renso.support@gmail.com</p>
-      <ul class="links">
+      <!-- <ul class="links">
         <li class="link">
           <a-icon type="twitter" />
         </li>
@@ -15,7 +15,7 @@
         <li class="link">
           <a-icon type="instagram" />
         </li>
-      </ul>
+      </ul> -->
     </div>
     <div class="footer-bottom-line">
       Renso ©2022 {{ $t("createdByRensoCorp") }}.
