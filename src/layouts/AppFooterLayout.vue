@@ -1,7 +1,7 @@
 <template>
   <div class="app-footer-layout-wrapper">
     <div class="footer-main-body">
-      <p>renso.support@gmail.com</p>
+      <p>moin@schlei-erleben.de</p>
       <!-- <ul class="links">
         <li class="link">
           <a-icon type="twitter" />
