@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://ec2-44-201-188-15.compute-1.amazonaws.com/api/v1";
+const BASE_URL = "https://backend.renso.de/api/v1";
 // const BASE_URL = "https://fed3-180-178-189-110.ngrok.io/api/v1";
 const PAGE_SIZE = 10;
 
