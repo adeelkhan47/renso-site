@@ -1,7 +1,9 @@
 <template>
   <div class="app-footer-layout-wrapper">
     <div class="footer-main-body">
-      <p>moin@schlei-erleben.de</p>
+      <p v-if="settings && settings.email">
+        {{ settings.email }}
+      </p>
       <!-- <ul class="links">
         <li class="link">
           <a-icon type="twitter" />
@@ -24,8 +26,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  name: "AppFooterLayout"
+  name: "AppFooterLayout",
+
+  computed: {
+    ...mapState("appSettingModule", ["settings"])
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@
       class="picker"
       :disabled-date="disabledStartDate"
       :disabled-time="disabledStartTime"
-      :show-time="{ format: 'HH:mm' }"
+      :show-time="showTime"
       :showNow="false"
       :placeholder="$t('startTime')"
       format="D MMMM YYYY, h:mm a"
@@ -19,7 +19,7 @@
       :disabled-date="disabledEndDate"
       :disabled-time="disabledEndTime"
       class="picker"
-      :show-time="{ format: 'HH:mm' }"
+      :show-time="showTime"
       :showNow="false"
       :placeholder="$t('endTime')"
       format="D MMMM YYYY, h:mm a"
@@ -48,7 +48,8 @@ export default {
       dayPicker: null,
       backendFormat: "YYYY-MM-DD HH:mm:ss",
       startTimeMode: "date",
-      endTimeMode: "date"
+      endTimeMode: "date",
+      showTime: { format: "HH:mm" }
     };
   },
 
@@ -111,6 +112,10 @@ export default {
     selectedItemType() {
       if (this.selectedItemType && Object.keys(this.selectedItemType).length) {
         this.setDayPicker(this.selectedItemType.id);
+        this.showTime =
+          this.selectedItemType.show_time_picker === true
+            ? { format: "HH:mm" }
+            : false;
       }
     },
 
@@ -289,12 +294,28 @@ export default {
 
     setTime(instance, isStartTime) {
       if (isStartTime) {
+        if (
+          instance &&
+          this.selectedItemType &&
+          this.selectedItemType.show_time_picker === false
+        ) {
+          instance.set({ hour: 0, minute: 0, seconds: 0 });
+        }
+
         this.startTimeLocal = instance;
         this.startTimeMode = "time";
         this.setStartTime(instance.format(this.backendFormat));
         this.endTimeLocal = "";
         this.setEndTime("");
       } else {
+        if (
+          instance &&
+          this.selectedItemType &&
+          this.selectedItemType.show_time_picker === false
+        ) {
+          instance.set({ hour: 23, minute: 59, seconds: 59 });
+        }
+
         if (this.endTimeMode === "time") {
           this.endTimeLocal = instance;
         } else {
