@@ -8,7 +8,7 @@
       :show-time="showTime"
       :showNow="false"
       :placeholder="$t('startTime')"
-      format="D MMMM YYYY, h:mm a"
+      :format="dateFormat"
       :mode="startTimeMode"
       :value="startTimeLocal"
       @change="(i) => setTime(i, true)"
@@ -22,7 +22,7 @@
       :show-time="showTime"
       :showNow="false"
       :placeholder="$t('endTime')"
-      format="D MMMM YYYY, h:mm a"
+      :format="dateFormat"
       :mode="endTimeMode"
       :value="endTimeLocal"
       @change="(i) => setTime(i, false)"
@@ -54,7 +54,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["startTime", "endTime"]),
+    ...mapState(["startTime", "endTime", "showTimePicker"]),
 
     ...mapState("timePickerModule", {
       timePickerLoading: "loading",
@@ -64,6 +64,10 @@ export default {
     ...mapState("itemTypeModule", {
       selectedItemType: "selectedItemType"
     }),
+
+    dateFormat() {
+      return this.showTimePicker ? "D MMMM YYYY, h:mm a" : "D MMMM YYYY";
+    },
 
     disabledWeekdays() {
       const disabledWeekdays = [];
@@ -112,10 +116,7 @@ export default {
     selectedItemType() {
       if (this.selectedItemType && Object.keys(this.selectedItemType).length) {
         this.setDayPicker(this.selectedItemType.id);
-        this.showTime =
-          this.selectedItemType.show_time_picker === true
-            ? { format: "HH:mm" }
-            : false;
+        this.showTime = this.showTimePicker ? { format: "HH:mm" } : false;
       }
     },
 
