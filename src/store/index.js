@@ -13,7 +13,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     startTime: "",
-    endTime: ""
+    endTime: "",
+    showTimePicker: true
   },
   actions: {
     setStartTime(ctx, time) {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     END_TIME(state, val) {
       state.endTime = val;
+    },
+    SHOW_TIME_PICKER(state, val) {
+      state.showTimePicker = val;
     }
   },
   modules: {
