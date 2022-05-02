@@ -54,6 +54,9 @@ const itemTypeModule = {
     setSelectedItemType(ctx, itemType) {
       if (itemType && Object.keys(itemType).length) {
         ctx.commit("SELECTED_ITEM_TYPE", itemType);
+        ctx.commit("SHOW_TIME_PICKER", Boolean(itemType.show_time_picker), {
+          root: true
+        });
       }
     }
   },

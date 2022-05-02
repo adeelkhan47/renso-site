@@ -1,5 +1,6 @@
 import axios from "axios";
 const BASE_URL = "https://backend.renso.de/api/v1";
+// const BASE_URL = "http://127.0.0.1:5001/api/v1";
 
 const PAGE_SIZE = 10;
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
