@@ -91,7 +91,7 @@
               :disabled="!isReady || (!privacy && privacyPolicyLink)"
               @click="onSubmit"
             >
-              {{ $t("pay") }}
+              {{ $t("book") }}
             </a-button>
           </a-form-model-item>
         </a-form-model>
