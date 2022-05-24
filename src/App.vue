@@ -11,6 +11,8 @@ import enUS from "ant-design-vue/es/locale/en_US";
 import deDE from "ant-design-vue/es/locale/de_DE";
 import { mapActions } from "vuex";
 
+const STATE_KEY = "PREVIOUS_STATE";
+
 export default {
   name: "App",
 
@@ -34,6 +36,14 @@ export default {
     this.initializeAppSettings();
     this.initializeItemTypesModule();
     this.initializeLocations();
+
+    const self = this;
+    const prevState = localStorage.getItem(STATE_KEY);
+    if (prevState) this.$store.replaceState(JSON.parse(prevState));
+
+    window.onbeforeunload = function () {
+      localStorage.setItem(STATE_KEY, JSON.stringify(self.$store.state));
+    };
   },
 
   methods: {
