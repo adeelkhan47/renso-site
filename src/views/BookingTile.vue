@@ -30,12 +30,12 @@
 
         <a-statistic
           :title="$t('startTime')"
-          :value="time(booking.start_time)"
-          class="block space-3 time"
+          :value="time(booking.start_time, format)"
+          class="block space-3"
         />
         <a-statistic
           :title="$t('endTime')"
-          :value="time(booking.end_time)"
+          :value="time(booking.end_time, format)"
           class="block space-3"
         />
       </div>
@@ -67,9 +67,14 @@ export default {
   },
 
   computed: {
-    time: () => (time) => {
+    format() {
+      const showTime = this.booking?.item?.item_type.show_time_picker;
+      return showTime ? "L, LT" : "L";
+    },
+
+    time: () => (time, format) => {
       if (!time) return "";
-      else return moment(time).format("L, LT");
+      else return moment(time).format(format);
     },
 
     location: () => (booking) => {
@@ -135,7 +140,7 @@ export default {
 }
 
 .space-3 {
-  width: 170px;
+  width: 200px;
 }
 
 @media only screen and (max-width: 750px) {

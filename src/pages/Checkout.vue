@@ -262,6 +262,7 @@ export default {
       const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
       orderApi
         .createOrder({
+          language: self.$i18n.locale,
           time_period: "01-01-2000 00:00:00",
           cart_id: cartId,
           voucher: appliedVoucher,
