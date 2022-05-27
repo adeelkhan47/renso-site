@@ -6,6 +6,7 @@ import orderApi from "./order.api";
 import dayPickerApi from "./day_picker.api";
 import timePickerApi from "./timePicker.api";
 import appSettingApi from "./app_setting.api";
+import paymentMethodApi from "./payment_method.api";
 
 export {
   itemTypeApi,
@@ -15,5 +16,6 @@ export {
   orderApi,
   dayPickerApi,
   timePickerApi,
-  appSettingApi
+  appSettingApi,
+  paymentMethodApi
 };

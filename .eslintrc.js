@@ -14,6 +14,7 @@ module.exports = {
     indent: "off",
     quotes: "off",
     "space-before-function-paren": "off",
-    "standard/no-callback-literal": "off"
+    "standard/no-callback-literal": "off",
+    "prefer-promise-reject-errors": "off"
   }
 };

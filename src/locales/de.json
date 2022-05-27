@@ -39,5 +39,6 @@
     "phoneNumberIsRequired": "Telefonnummer ist erforderlich",
     "checkout": "Kasse",
     "valueIsRequired": "Wert erforderlich",
-    "acceptPrivacyPolicy": "Datenschutzbestimmungen akzeptieren"
+    "acceptPrivacyPolicy": "Datenschutzbestimmungen akzeptieren",
+    "selectPaymentMethod": "Wählen Sie die Zahlungsmethode"
 }
