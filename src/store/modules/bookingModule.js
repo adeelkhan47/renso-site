@@ -3,7 +3,8 @@ import {
   getIt,
   saveIt,
   EXISTING_CART_ID_KEY,
-  APPLIED_VOUCHER_KEY
+  APPLIED_VOUCHER_KEY,
+  TRANSACTION_ID_KEY
 } from "../../utils/localStorage.util";
 
 const bookingModule = {
@@ -17,6 +18,9 @@ const bookingModule = {
       totalPrice: 0,
       taxAmount: 0,
       finalPrice: 0,
+      paidAmount: 0,
+      amountDue: 0,
+      isEdit: false,
       taxes: [],
       privacyPolicyLink: "",
       hasBag: false
@@ -30,10 +34,10 @@ const bookingModule = {
   },
 
   actions: {
-    getBookings(ctx, { cartId, voucher, cb }) {
+    getBookings(ctx, { cartId, voucher = "", transactionId = "", cb }) {
       ctx.commit("LOADING", true);
       bookingApi
-        .getBookings(cartId, voucher)
+        .getBookingDetails(cartId, voucher, transactionId)
         .then((res) => {
           if (res && res.data) {
             ctx.commit("BOOKINGS", res.data.objects.bookings);
@@ -41,6 +45,15 @@ const bookingModule = {
             ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
             ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
             ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
+
+            const isEdit = res.data.objects.isEdited;
+            const paid = res.data.objects.price_already_paid;
+            const payable = res.data.objects.updated_amount;
+
+            ctx.commit("IS_EDIT", isEdit);
+            ctx.commit("PAID_AMOUNT", paid);
+            ctx.commit("AMOUNT_DUE", payable);
+
             ctx.commit(
               "PRIVACY_POLICY_LINK",
               res.data.objects.privacy_policy_link || ""
@@ -60,11 +73,36 @@ const bookingModule = {
                 data: res.data.objects.voucher
               });
             }
+          } else {
+            ctx.commit("BOOKINGS", []);
+            ctx.commit("TAXES", []);
+            ctx.commit("SUB_TOTAL", "0");
+            ctx.commit("TOTAL_PRICE", "0");
+            ctx.commit("TAX_AMOUNT", "0");
+            ctx.commit("PRIVACY_POLICY_LINK", "");
+            ctx.commit("FINAL_PRICE", "0");
+            ctx.commit("HAS_BAG", false);
+            ctx.commit("IS_EDIT", false);
+            ctx.commit("PAID_AMOUNT", 0);
+            ctx.commit("AMOUNT_DUE", 0);
           }
           ctx.commit("LOADING", false);
         })
         .catch((err) => {
           console.error(err);
+
+          ctx.commit("BOOKINGS", []);
+          ctx.commit("TAXES", []);
+          ctx.commit("SUB_TOTAL", "0");
+          ctx.commit("TOTAL_PRICE", "0");
+          ctx.commit("TAX_AMOUNT", "0");
+          ctx.commit("PRIVACY_POLICY_LINK", "");
+          ctx.commit("FINAL_PRICE", "0");
+          ctx.commit("HAS_BAG", false);
+          ctx.commit("IS_EDIT", false);
+          ctx.commit("PAID_AMOUNT", 0);
+          ctx.commit("AMOUNT_DUE", 0);
+
           ctx.commit("LOADING", false);
         });
     },
@@ -118,11 +156,12 @@ const bookingModule = {
       ctx.commit("LOADING", true);
       bookingApi
         .deleteBooking(id)
-        .then((res) => {
+        .then(() => {
           const cartId = getIt(EXISTING_CART_ID_KEY);
           const voucher = getIt(APPLIED_VOUCHER_KEY);
+          const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId);
           ctx.commit("LOADING", false);
-          ctx.dispatch("getBookings", { cartId, voucher });
+          ctx.dispatch("getBookings", { cartId, voucher, transactionId });
         })
         .catch((err) => {
           console.error(err);
@@ -166,6 +205,18 @@ const bookingModule = {
 
     TAXES(state, val) {
       state.taxes = val;
+    },
+
+    PAID_AMOUNT(state, val) {
+      state.paidAmount = val;
+    },
+
+    AMOUNT_DUE(state, val) {
+      state.amountDue = val;
+    },
+
+    IS_EDIT(state, val) {
+      state.isEdit = val;
     },
 
     PRIVACY_POLICY_LINK(state, val) {

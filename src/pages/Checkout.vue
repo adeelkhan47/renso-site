@@ -70,6 +70,21 @@
             </a-form-model-item>
           </template>
           <a-form-model-item
+            :label="$t('selectPaymentMethod')"
+            v-if="paymentMethods && paymentMethods.length"
+          >
+            <a-radio-group size="large" v-model="selectedPaymentMethodId">
+              <a-radio
+                v-for="method in paymentMethods"
+                :key="method.id"
+                :value="method.id"
+                class="radio-item"
+              >
+                {{ method.name + " (" + method.description + ")" }}
+              </a-radio>
+            </a-radio-group>
+          </a-form-model-item>
+          <a-form-model-item
             :wrapper-col="actionWrapCol"
             v-if="privacyPolicyLink"
           >
@@ -88,7 +103,12 @@
               style="margin-left: 10px"
               icon="credit-card"
               class="action"
-              :disabled="!isReady || (!privacy && privacyPolicyLink)"
+              :disabled="
+                !isReady ||
+                (!privacy && privacyPolicyLink) ||
+                !paymentMethods ||
+                paymentMethods.length === 0
+              "
               @click="onSubmit"
             >
               {{ $t("book") }}
@@ -108,12 +128,13 @@
 
 <script>
 import { mapState } from "vuex";
-import { orderApi } from "../apis";
+import { orderApi, paymentMethodApi } from "../apis";
 import {
   APPLIED_VOUCHER_KEY,
   EXISTING_CART_ID_KEY,
   getIt,
-  STRIPE_PUBLIC_KEY
+  STRIPE_PUBLIC_KEY,
+  TRANSACTION_ID_KEY
 } from "../utils/localStorage.util";
 
 export default {
@@ -158,7 +179,9 @@ export default {
           }
         ]
       },
-      extraFields: []
+      extraFields: [],
+      paymentMethods: [],
+      selectedPaymentMethodId: null
     };
   },
 
@@ -208,20 +231,91 @@ export default {
   },
 
   created() {
+    const self = this;
     this.loading = true;
-    orderApi
-      .getOrderExtraFields()
-      .then((res) => {
-        if (res && res.data && res.data.objects && res.data.objects.length) {
-          this.extraFields = res.data.objects;
-          this.setAdditionalRules();
-        }
-        this.loading = false;
+
+    const promises = [
+      new Promise((resolve, reject) => {
+        orderApi
+          .getOrderExtraFields()
+          .then((res) => {
+            if (
+              res &&
+              res.data &&
+              res.data.objects &&
+              res.data.objects.length
+            ) {
+              resolve({
+                name: "extraFields",
+                value: res.data.objects
+              });
+            } else {
+              resolve({
+                name: "extraFields",
+                value: []
+              });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            reject({
+              name: "extraFields",
+              error: "Actual error"
+            });
+          });
+      }),
+      new Promise((resolve, reject) => {
+        paymentMethodApi
+          .getActivePaymentMethods()
+          .then((res) => {
+            if (
+              res &&
+              res.data &&
+              res.data.objects &&
+              res.data.objects.length
+            ) {
+              resolve({
+                name: "paymentMethods",
+                value: res.data.objects
+              });
+            } else {
+              reject({
+                name: "paymentMethods",
+                error: "No data found"
+              });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            reject({
+              name: "paymentMethods",
+              error: "Actual error"
+            });
+          });
       })
-      .catch((err) => {
-        console.error(err);
-        this.loading = false;
-      });
+    ];
+
+    Promise.all(promises).then((result) => {
+      if (result && result.length) {
+        result.forEach((obj) => {
+          switch (obj.name) {
+            case "extraFields":
+              self.extraFields = obj.value;
+              self.setAdditionalRules();
+              break;
+
+            case "paymentMethods":
+              self.paymentMethods = obj.value;
+              self.selectedPaymentMethodId = obj.value[0].id;
+              break;
+
+            default:
+              break;
+          }
+        });
+        self.loading = false;
+      }
+    });
   },
 
   methods: {
@@ -260,23 +354,38 @@ export default {
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
+      const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId) || "";
+      const selectedMethod = this.paymentMethods.find(
+        (obj) => obj.id === this.selectedPaymentMethodId
+      );
+      const isPaypal =
+        selectedMethod &&
+        selectedMethod.name &&
+        selectedMethod.name.toLowerCase() === "paypal";
+
       orderApi
         .createOrder({
+          payment_method_id: self.selectedPaymentMethodId,
           language: self.$i18n.locale,
           time_period: "01-01-2000 00:00:00",
           cart_id: cartId,
           voucher: appliedVoucher,
+          backup_unique_key: transactionId,
           ...this.form
         })
         .then((res) => {
           const sessionId = res.data.objects.session_id;
-          this.loading = false;
-          if (!sessionId) {
-            self.$router.push("/success");
-          } else {
+          const paypalURL = res.data.objects.paypal_url;
+
+          if (isPaypal && paypalURL) {
+            window.location = paypalURL;
+          } else if (!isPaypal && sessionId) {
             // eslint-disable-next-line no-undef
             const stripe = new Stripe(STRIPE_PUBLIC_KEY);
             stripe.redirectToCheckout({ sessionId: sessionId });
+          } else {
+            this.loading = false;
+            self.$router.push("/success");
           }
         })
         .catch((err) => {
@@ -330,6 +439,12 @@ img.logo-img {
 .checkout .ant-form-item .ant-form-item-label {
   line-height: 1.5;
   padding-bottom: 0px;
+}
+
+.checkout .radio-item {
+  display: block;
+  margin-bottom: 10px;
+  text-overflow: ellipsis;
 }
 
 @media only screen and (max-width: 770px) {

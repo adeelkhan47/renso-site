@@ -39,5 +39,9 @@
     "phoneNumberIsRequired": "Phone number is required",
     "checkout": "Checkout",
     "valueIsRequired": "Value is required",
-    "acceptPrivacyPolicy": "Accept Privacy Policy"
+    "acceptPrivacyPolicy": "Accept Privacy Policy",
+    "selectPaymentMethod": "Select Payment Method",
+    "alreadyPaid": "Already paid",
+    "amountDue": "Amount Due",
+    "refundMessage": "Contact support for a refund"
 }

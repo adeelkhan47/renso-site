@@ -26,11 +26,12 @@ const appSettingModule = {
         .then((res) => {
           if (res && res.data) {
             ctx.commit("SETTINGS", res.data.objects);
-          }
+          } else ctx.commit("SETTINGS", {});
           ctx.commit("LOADING", false);
         })
         .catch((err) => {
           console.error(err);
+          ctx.commit("SETTINGS", {});
           ctx.commit("LOADING", false);
         });
     }

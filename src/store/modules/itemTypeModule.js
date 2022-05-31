@@ -26,11 +26,12 @@ const itemTypeModule = {
         .then((res) => {
           if (res && res.data) {
             ctx.commit("ITEM_TYPES", res.data.objects);
-          }
+          } else ctx.commit("ITEM_TYPES", []);
           ctx.commit("LOADING", false);
         })
         .catch((err) => {
           console.error(err);
+          ctx.commit("ITEM_TYPES", []);
           ctx.commit("LOADING", false);
         });
 
@@ -44,10 +45,12 @@ const itemTypeModule = {
             );
 
             if (extra) ctx.commit("EXTRA_ITEM_TYPE", extra);
+            else ctx.commit("EXTRA_ITEM_TYPE", null);
           }
         })
         .catch((err) => {
           console.error(err);
+          ctx.commit("EXTRA_ITEM_TYPE", null);
         });
     },
 
