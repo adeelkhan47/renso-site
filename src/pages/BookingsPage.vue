@@ -75,7 +75,8 @@ import {
   getIt,
   saveIt,
   EXISTING_CART_ID_KEY,
-  APPLIED_VOUCHER_KEY
+  APPLIED_VOUCHER_KEY,
+  TRANSACTION_ID_KEY
 } from "../utils/localStorage.util";
 
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -136,10 +137,12 @@ export default {
       const self = this;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const voucher = getIt(APPLIED_VOUCHER_KEY);
+      const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId);
       if (cartId) {
         this.getBookings({
           cartId,
           voucher,
+          transactionId,
           cb: (res) => {
             if (appliedVoucher && res.success) {
               if (res.data && Object.keys(res.data).length) {

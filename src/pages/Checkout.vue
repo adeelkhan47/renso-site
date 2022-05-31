@@ -133,7 +133,8 @@ import {
   APPLIED_VOUCHER_KEY,
   EXISTING_CART_ID_KEY,
   getIt,
-  STRIPE_PUBLIC_KEY
+  STRIPE_PUBLIC_KEY,
+  TRANSACTION_ID_KEY
 } from "../utils/localStorage.util";
 
 export default {
@@ -353,6 +354,7 @@ export default {
       this.loading = true;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const appliedVoucher = getIt(APPLIED_VOUCHER_KEY) || "";
+      const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId) || "";
       const selectedMethod = this.paymentMethods.find(
         (obj) => obj.id === this.selectedPaymentMethodId
       );
@@ -368,6 +370,7 @@ export default {
           time_period: "01-01-2000 00:00:00",
           cart_id: cartId,
           voucher: appliedVoucher,
+          backup_unique_key: transactionId,
           ...this.form
         })
         .then((res) => {

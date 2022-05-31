@@ -17,6 +17,11 @@ const routes = [
         component: HomePage
       },
       {
+        path: "cart/edit/:cartId/:transactionId",
+        name: "Edit",
+        component: () => import("../pages/CartEditPage.vue")
+      },
+      {
         path: "/cart",
         name: "Cart",
         component: () => import("../pages/BookingsPage.vue")

@@ -14,7 +14,10 @@ import { mapActions } from "vuex";
 import {
   APPLIED_VOUCHER_KEY,
   EXISTING_CART_ID_KEY,
-  removeIt
+  TRANSACTION_ID_KEY,
+  MATCH_REGEX,
+  removeIt,
+  removeMatched
 } from "../utils/localStorage.util";
 export default {
   name: "PaymentSuccess",
@@ -26,6 +29,7 @@ export default {
   mounted() {
     removeIt(EXISTING_CART_ID_KEY);
     removeIt(APPLIED_VOUCHER_KEY);
+    removeMatched(TRANSACTION_ID_KEY, MATCH_REGEX.STARTS_WITH);
 
     this.reset();
   },

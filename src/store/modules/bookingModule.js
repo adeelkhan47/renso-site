@@ -3,7 +3,8 @@ import {
   getIt,
   saveIt,
   EXISTING_CART_ID_KEY,
-  APPLIED_VOUCHER_KEY
+  APPLIED_VOUCHER_KEY,
+  TRANSACTION_ID_KEY
 } from "../../utils/localStorage.util";
 
 const bookingModule = {
@@ -30,10 +31,10 @@ const bookingModule = {
   },
 
   actions: {
-    getBookings(ctx, { cartId, voucher, cb }) {
+    getBookings(ctx, { cartId, voucher = "", transactionId = "", cb }) {
       ctx.commit("LOADING", true);
       bookingApi
-        .getBookings(cartId, voucher)
+        .getBookingDetails(cartId, voucher, transactionId)
         .then((res) => {
           if (res && res.data) {
             ctx.commit("BOOKINGS", res.data.objects.bookings);
@@ -60,11 +61,30 @@ const bookingModule = {
                 data: res.data.objects.voucher
               });
             }
+          } else {
+            ctx.commit("BOOKINGS", []);
+            ctx.commit("TAXES", []);
+            ctx.commit("SUB_TOTAL", "0");
+            ctx.commit("TOTAL_PRICE", "0");
+            ctx.commit("TAX_AMOUNT", "0");
+            ctx.commit("PRIVACY_POLICY_LINK", "");
+            ctx.commit("FINAL_PRICE", "0");
+            ctx.commit("HAS_BAG", false);
           }
           ctx.commit("LOADING", false);
         })
         .catch((err) => {
           console.error(err);
+
+          ctx.commit("BOOKINGS", []);
+          ctx.commit("TAXES", []);
+          ctx.commit("SUB_TOTAL", "0");
+          ctx.commit("TOTAL_PRICE", "0");
+          ctx.commit("TAX_AMOUNT", "0");
+          ctx.commit("PRIVACY_POLICY_LINK", "");
+          ctx.commit("FINAL_PRICE", "0");
+          ctx.commit("HAS_BAG", false);
+
           ctx.commit("LOADING", false);
         });
     },
@@ -118,11 +138,12 @@ const bookingModule = {
       ctx.commit("LOADING", true);
       bookingApi
         .deleteBooking(id)
-        .then((res) => {
+        .then(() => {
           const cartId = getIt(EXISTING_CART_ID_KEY);
           const voucher = getIt(APPLIED_VOUCHER_KEY);
+          const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId);
           ctx.commit("LOADING", false);
-          ctx.dispatch("getBookings", { cartId, voucher });
+          ctx.dispatch("getBookings", { cartId, voucher, transactionId });
         })
         .catch((err) => {
           console.error(err);
