@@ -18,6 +18,9 @@ const bookingModule = {
       totalPrice: 0,
       taxAmount: 0,
       finalPrice: 0,
+      paidAmount: 0,
+      amountDue: 0,
+      isEdit: false,
       taxes: [],
       privacyPolicyLink: "",
       hasBag: false
@@ -42,6 +45,15 @@ const bookingModule = {
             ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
             ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
             ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
+
+            const isEdit = res.data.objects.isEdited;
+            const paid = res.data.objects.price_already_paid;
+            const payable = res.data.objects.updated_amount;
+
+            ctx.commit("IS_EDIT", isEdit);
+            ctx.commit("PAID_AMOUNT", paid);
+            ctx.commit("AMOUNT_DUE", payable);
+
             ctx.commit(
               "PRIVACY_POLICY_LINK",
               res.data.objects.privacy_policy_link || ""
@@ -70,6 +82,9 @@ const bookingModule = {
             ctx.commit("PRIVACY_POLICY_LINK", "");
             ctx.commit("FINAL_PRICE", "0");
             ctx.commit("HAS_BAG", false);
+            ctx.commit("IS_EDIT", false);
+            ctx.commit("PAID_AMOUNT", 0);
+            ctx.commit("AMOUNT_DUE", 0);
           }
           ctx.commit("LOADING", false);
         })
@@ -84,6 +99,9 @@ const bookingModule = {
           ctx.commit("PRIVACY_POLICY_LINK", "");
           ctx.commit("FINAL_PRICE", "0");
           ctx.commit("HAS_BAG", false);
+          ctx.commit("IS_EDIT", false);
+          ctx.commit("PAID_AMOUNT", 0);
+          ctx.commit("AMOUNT_DUE", 0);
 
           ctx.commit("LOADING", false);
         });
@@ -187,6 +205,18 @@ const bookingModule = {
 
     TAXES(state, val) {
       state.taxes = val;
+    },
+
+    PAID_AMOUNT(state, val) {
+      state.paidAmount = val;
+    },
+
+    AMOUNT_DUE(state, val) {
+      state.amountDue = val;
+    },
+
+    IS_EDIT(state, val) {
+      state.isEdit = val;
     },
 
     PRIVACY_POLICY_LINK(state, val) {

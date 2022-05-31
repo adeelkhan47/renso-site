@@ -40,5 +40,8 @@
     "checkout": "Kasse",
     "valueIsRequired": "Wert erforderlich",
     "acceptPrivacyPolicy": "Datenschutzbestimmungen akzeptieren",
-    "selectPaymentMethod": "Wählen Sie die Zahlungsmethode"
+    "selectPaymentMethod": "Wählen Sie die Zahlungsmethode",
+    "alreadyPaid": "Bereits bezahlt",
+    "amountDue": "Fälliger Betrag",
+    "refundMessage": "Wenden Sie sich für eine Rückerstattung an den Support"
 }

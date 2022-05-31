@@ -41,6 +41,20 @@
         <span class="label"> {{ $t("total") }} </span>
         <span class="value"> € {{ finalPrice | price }} </span>
       </div>
+      <div class="page-row details" v-if="isEdit">
+        <span class="label"> {{ $t("alreadyPaid") }} </span>
+        <span class="value"> € {{ paidAmount | price }} </span>
+      </div>
+      <div class="page-row details" v-if="isEdit">
+        <span class="label"> {{ $t("amountDue") }} </span>
+        <span class="value" v-if="amountDue > 0">
+          € {{ amountDue | price }}
+        </span>
+        <span class="value" v-else> € {{ 0 | price }} </span>
+      </div>
+      <div class="page-row details" v-if="isEdit && amountDue < 0">
+        <span class="message"> {{ $t("refundMessage") }} </span>
+      </div>
       <div class="page-row actions">
         <a-button
           class="action"
@@ -109,6 +123,9 @@ export default {
       "totalPrice",
       "taxAmount",
       "finalPrice",
+      "isEdit",
+      "paidAmount",
+      "amountDue",
       "taxes"
     ]),
     ...mapGetters("bookingModule", ["bookings"]),
@@ -281,6 +298,14 @@ li.booking {
   margin: 4px 5px;
   width: 150px;
   text-align: end;
+}
+
+.details .message {
+  margin: 10px 5px;
+  max-width: 395px;
+  font-weight: lighter;
+  font-style: italic;
+  text-align: right;
 }
 
 @media only screen and (max-width: 770px) {
