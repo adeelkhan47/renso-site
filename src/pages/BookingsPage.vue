@@ -41,6 +41,20 @@
         <span class="label"> {{ $t("total") }} </span>
         <span class="value"> € {{ finalPrice | price }} </span>
       </div>
+      <div class="page-row details" v-if="isEdit">
+        <span class="label"> {{ $t("alreadyPaid") }} </span>
+        <span class="value"> € {{ paidAmount | price }} </span>
+      </div>
+      <div class="page-row details" v-if="isEdit">
+        <span class="label"> {{ $t("amountDue") }} </span>
+        <span class="value" v-if="amountDue > 0">
+          € {{ amountDue | price }}
+        </span>
+        <span class="value" v-else> € {{ 0 | price }} </span>
+      </div>
+      <div class="page-row details" v-if="isEdit && amountDue < 0">
+        <span class="message"> {{ $t("refundMessage") }} </span>
+      </div>
       <div class="page-row actions">
         <a-button
           class="action"
@@ -75,7 +89,8 @@ import {
   getIt,
   saveIt,
   EXISTING_CART_ID_KEY,
-  APPLIED_VOUCHER_KEY
+  APPLIED_VOUCHER_KEY,
+  TRANSACTION_ID_KEY
 } from "../utils/localStorage.util";
 
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -108,6 +123,9 @@ export default {
       "totalPrice",
       "taxAmount",
       "finalPrice",
+      "isEdit",
+      "paidAmount",
+      "amountDue",
       "taxes"
     ]),
     ...mapGetters("bookingModule", ["bookings"]),
@@ -136,10 +154,12 @@ export default {
       const self = this;
       const cartId = getIt(EXISTING_CART_ID_KEY);
       const voucher = getIt(APPLIED_VOUCHER_KEY);
+      const transactionId = getIt(TRANSACTION_ID_KEY + "_" + cartId);
       if (cartId) {
         this.getBookings({
           cartId,
           voucher,
+          transactionId,
           cb: (res) => {
             if (appliedVoucher && res.success) {
               if (res.data && Object.keys(res.data).length) {
@@ -278,6 +298,14 @@ li.booking {
   margin: 4px 5px;
   width: 150px;
   text-align: end;
+}
+
+.details .message {
+  margin: 10px 5px;
+  max-width: 395px;
+  font-weight: lighter;
+  font-style: italic;
+  text-align: right;
 }
 
 @media only screen and (max-width: 770px) {

@@ -1,11 +1,14 @@
 import { axios, BASE_URL } from "./config";
 import FAKE_API from "./__fake.api";
 
-function getBookings(cartId, voucher) {
+function getBookingDetails(cartId, voucher = "", transactionId = "") {
   if (FAKE_API.USE_FAKE) return FAKE_API.getPageBooking();
 
   let url = BASE_URL + "/booking/bulk?cart_id=" + cartId;
-  if (voucher) {
+  if (transactionId) {
+    url += "&backup_unique_key=" + transactionId;
+    // transactionId contains the information about voucher (no need to forward it)
+  } else if (voucher) {
     url += "&voucher=" + voucher;
   }
   return axios.get(url);
@@ -20,7 +23,7 @@ function deleteBooking(id) {
 }
 
 const bookingApi = {
-  getBookings,
+  getBookingDetails,
   createBulkBookings,
   deleteBooking
 };

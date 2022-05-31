@@ -25,11 +25,12 @@ const locationModule = {
         .then((res) => {
           if (res && res.data) {
             ctx.commit("LOCATIONS", res.data.objects);
-          }
+          } else ctx.commit("LOCATIONS", []);
           ctx.commit("LOADING", false);
         })
         .catch((err) => {
           console.error(err);
+          ctx.commit("LOCATIONS", []);
           ctx.commit("LOADING", false);
         });
     },
