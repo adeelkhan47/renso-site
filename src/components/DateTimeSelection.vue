@@ -15,6 +15,7 @@
       @panelChange="(i, mode) => changeTimeMode(i, mode, true)"
     />
     <a-date-picker
+      :defaultPickerValue="defaultEndDatePickerValue"
       :disabled="!startTimeLocal || timePickerLoading || dayPickerLoading"
       :disabled-date="disabledEndDate"
       :disabled-time="disabledEndTime"
@@ -42,6 +43,7 @@ export default {
 
   data() {
     return {
+      defaultEndDatePickerValue: "",
       dayPickerLoading: false,
       startTimeLocal: "",
       endTimeLocal: "",
@@ -295,22 +297,38 @@ export default {
 
     setTime(instance, isStartTime) {
       if (isStartTime) {
+        if (!instance) {
+          this.startTimeLocal = "";
+          this.endTimeLocal = "";
+          this.setStartTime("");
+          this.setEndTime("");
+          return;
+        }
+
         if (
-          instance &&
           this.selectedItemType &&
           this.selectedItemType.show_time_picker === false
         ) {
           instance.set({ hour: 0, minute: 0, seconds: 0 });
         }
 
+        if (this.showTime) {
+          this.startTimeMode = "time";
+        }
+
         this.startTimeLocal = instance;
-        this.startTimeMode = "time";
         this.setStartTime(instance.format(this.backendFormat));
+        this.defaultEndDatePickerValue = instance;
         this.endTimeLocal = "";
         this.setEndTime("");
       } else {
+        if (!instance) {
+          this.endTimeLocal = "";
+          this.setEndTime("");
+          return;
+        }
+
         if (
-          instance &&
           this.selectedItemType &&
           this.selectedItemType.show_time_picker === false
         ) {
@@ -322,8 +340,12 @@ export default {
         } else {
           this.endTimeLocal = this.getExtendedTime(instance);
         }
+
+        if (this.showTime) {
+          this.endTimeMode = "time";
+        }
+
         this.setEndTime(this.endTimeLocal.format(this.backendFormat));
-        this.endTimeMode = "time";
       }
     },
 

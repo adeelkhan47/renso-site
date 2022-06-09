@@ -78,13 +78,8 @@ export default {
     },
 
     location: () => (booking) => {
-      if (
-        booking &&
-        booking.item &&
-        booking.item.item_locations &&
-        booking.item.item_locations.length
-      ) {
-        return booking.item.item_locations[0].location.name;
+      if (booking && booking.location && booking.location.name) {
+        return booking.location.name;
       } else return "-";
     }
   },
