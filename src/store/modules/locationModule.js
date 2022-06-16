@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { locationApi } from "../../apis";
 
 const locationModule = {
@@ -32,6 +33,12 @@ const locationModule = {
           console.error(err);
           ctx.commit("LOCATIONS", []);
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     },
 

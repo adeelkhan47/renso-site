@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { appSettingApi } from "../../apis";
 
 const appSettingModule = {
@@ -33,6 +34,12 @@ const appSettingModule = {
           console.error(err);
           ctx.commit("SETTINGS", {});
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     }
   },
