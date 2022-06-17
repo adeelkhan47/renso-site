@@ -378,6 +378,9 @@ export default {
           console.error(err);
           this.dayPicker = null;
           this.dayPickerLoading = false;
+          this.$message.error(
+            this.$extractErrorMsg(err, this.$t("somethingWentWrong"))
+          );
         });
     }
   }

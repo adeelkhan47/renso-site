@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { itemSubtypeApi } from "../../apis";
 
 const itemSubtypeModule = {
@@ -69,6 +70,12 @@ const itemSubtypeModule = {
           console.error(err);
           ctx.commit("ITEM_SUBTYPES", []);
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     },
 
@@ -86,6 +93,12 @@ const itemSubtypeModule = {
           console.error(err);
           ctx.commit("EXTRAS", []);
           ctx.commit("LOADING_EX", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     },
 

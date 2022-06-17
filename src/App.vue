@@ -11,6 +11,7 @@ import enUS from "ant-design-vue/es/locale/en_US";
 import deDE from "ant-design-vue/es/locale/de_DE";
 import { mapActions } from "vuex";
 import { getIt, removeIt, saveIt } from "./utils/localStorage.util";
+import Vue from "vue";
 
 const STATE_KEY = "PREVIOUS_STATE";
 
@@ -34,6 +35,9 @@ export default {
   },
 
   created() {
+    // supports localization in vuex modules
+    Vue.prototype.$$t = (key) => this.$t(key);
+
     this.initializeAppSettings();
     this.initializeItemTypesModule();
     this.initializeLocations();

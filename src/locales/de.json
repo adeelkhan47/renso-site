@@ -43,5 +43,6 @@
     "selectPaymentMethod": "Wählen Sie die Zahlungsmethode",
     "alreadyPaid": "Bereits bezahlt",
     "amountDue": "Fälliger Betrag",
-    "refundMessage": "Wenden Sie sich für eine Rückerstattung an den Support"
+    "refundMessage": "Wenden Sie sich für eine Rückerstattung an den Support",
+    "somethingWentWrong": "Etwas ist schief gelaufen"
 }

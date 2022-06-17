@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { itemTypeApi } from "../../apis";
 
 const itemTypeModule = {
@@ -33,6 +34,12 @@ const itemTypeModule = {
           console.error(err);
           ctx.commit("ITEM_TYPES", []);
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
 
       itemTypeApi
@@ -51,6 +58,12 @@ const itemTypeModule = {
         .catch((err) => {
           console.error(err);
           ctx.commit("EXTRA_ITEM_TYPE", null);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     },
 

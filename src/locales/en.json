@@ -43,5 +43,6 @@
     "selectPaymentMethod": "Select Payment Method",
     "alreadyPaid": "Already paid",
     "amountDue": "Amount Due",
-    "refundMessage": "Contact support for a refund"
+    "refundMessage": "Contact support for a refund",
+    "somethingWentWrong": "Something went wrong"
 }
