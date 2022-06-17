@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { timePickerApi } from "../../apis";
 
 const timePickerModule = {
@@ -27,6 +28,12 @@ const timePickerModule = {
           console.error(err);
           ctx.commit("TIME_PICKERS", []);
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     }
   },

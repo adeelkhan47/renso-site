@@ -391,6 +391,9 @@ export default {
         .catch((err) => {
           console.error(err);
           this.loading = false;
+          this.$message.error(
+            this.$extractErrorMsg(err, this.$t("somethingWentWrong"))
+          );
         });
     }
   }

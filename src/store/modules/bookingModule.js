@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { bookingApi } from "../../apis";
 import {
   getIt,
@@ -166,6 +167,12 @@ const bookingModule = {
         .catch((err) => {
           console.error(err);
           ctx.commit("LOADING", false);
+          Vue.prototype.$message.error(
+            Vue.prototype.$extractErrorMsg(
+              err,
+              Vue.prototype.$$t("somethingWentWrong")
+            )
+          );
         });
     },
 

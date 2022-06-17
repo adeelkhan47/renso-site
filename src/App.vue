@@ -10,6 +10,8 @@
 import enUS from "ant-design-vue/es/locale/en_US";
 import deDE from "ant-design-vue/es/locale/de_DE";
 import { mapActions } from "vuex";
+import { getIt, removeIt, saveIt } from "./utils/localStorage.util";
+import Vue from "vue";
 
 const STATE_KEY = "PREVIOUS_STATE";
 
@@ -33,16 +35,22 @@ export default {
   },
 
   created() {
+    // supports localization in vuex modules
+    Vue.prototype.$$t = (key) => this.$t(key);
+
     this.initializeAppSettings();
     this.initializeItemTypesModule();
     this.initializeLocations();
 
     const self = this;
-    const prevState = localStorage.getItem(STATE_KEY);
-    if (prevState) this.$store.replaceState(JSON.parse(prevState));
+    const prevState = getIt(STATE_KEY);
+    if (prevState) {
+      this.$store.replaceState(JSON.parse(prevState));
+      removeIt(STATE_KEY);
+    }
 
     window.onbeforeunload = function () {
-      localStorage.setItem(STATE_KEY, JSON.stringify(self.$store.state));
+      saveIt(STATE_KEY, JSON.stringify(self.$store.state));
     };
   },
 
