@@ -44,5 +44,6 @@
     "alreadyPaid": "Already paid",
     "amountDue": "Amount Due",
     "refundMessage": "Contact support for a refund",
-    "somethingWentWrong": "Something went wrong"
+    "somethingWentWrong": "Something went wrong",
+    "price": "Price"
 }

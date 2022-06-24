@@ -38,6 +38,13 @@
           :value="time(booking.end_time, format)"
           class="block space-3"
         />
+        <a-statistic
+          :title="$t('price')"
+          :value="booking.cost"
+          class="block space-4"
+        >
+          <template #prefix> € </template>
+        </a-statistic>
       </div>
       <div class="row">
         <a-button
@@ -136,6 +143,10 @@ export default {
 
 .space-3 {
   width: 200px;
+}
+
+.space-4 {
+  width: 80px;
 }
 
 @media only screen and (max-width: 750px) {
