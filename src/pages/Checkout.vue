@@ -85,10 +85,11 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item
-            :label="$t('acceptPrivacyPolicy')"
+            :wrapper-col="actionWrapCol"
             class="form-checkbox-item"
           >
             <a-checkbox v-model="acceptPolicy">
+              {{ $t("accept") }}
               <a :href="settings.link1" target="blank" class="link">
                 {{ settings.link1_name || settings.link1 }}
               </a>
@@ -149,7 +150,7 @@ export default {
       loading: false,
       labelCol: { sm: {}, md: { span: 8 } },
       wrapperCol: { sm: {}, md: { span: 10 } },
-      actionWrapCol: { sm: {}, md: { span: 9, offset: 9 } },
+      actionWrapCol: { sm: {}, md: { span: 10, offset: 8 } },
       other: "",
       form: {
         client_name: "",

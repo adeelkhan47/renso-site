@@ -39,7 +39,7 @@
     "phoneNumberIsRequired": "Telefonnummer ist erforderlich",
     "checkout": "Kasse",
     "valueIsRequired": "Wert erforderlich",
-    "acceptPrivacyPolicy": "Datenschutzbestimmungen akzeptieren",
+    "accept": "Annehmen",
     "selectPaymentMethod": "Wählen Sie die Zahlungsmethode",
     "alreadyPaid": "Bereits bezahlt",
     "amountDue": "Fälliger Betrag",

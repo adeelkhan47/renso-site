@@ -64,6 +64,7 @@ export default {
 
 .tile-row {
   margin: 0;
+  padding: 0px;
   width: 100%;
 }
 
@@ -76,9 +77,13 @@ export default {
 }
 
 .description-row {
-  width: 100%;
-  text-align: center;
-  margin-top: 5px;
+  width: calc(100% - 30px);
+  margin: 5px 15px;
+  border: 1px solid #d9d9d9;
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: grey;
 }
 
 .content {
