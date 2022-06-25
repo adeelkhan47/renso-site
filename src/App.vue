@@ -11,6 +11,8 @@ import enUS from "ant-design-vue/es/locale/en_US";
 import deDE from "ant-design-vue/es/locale/de_DE";
 import { mapActions } from "vuex";
 import {
+  APPLIED_VOUCHER_KEY,
+  EXISTING_CART_ID_KEY,
   getIt,
   MATCH_REGEX,
   removeIt,
@@ -58,7 +60,14 @@ export default {
 
     window.onbeforeunload = function () {
       saveIt(STATE_KEY, JSON.stringify(self.$store.state));
-      removeMatched(TRANSACTION_ID_KEY, MATCH_REGEX.STARTS_WITH);
+      const isRemoved = removeMatched(
+        TRANSACTION_ID_KEY,
+        MATCH_REGEX.STARTS_WITH
+      );
+      if (isRemoved) {
+        removeIt(EXISTING_CART_ID_KEY);
+        removeIt(APPLIED_VOUCHER_KEY);
+      }
     };
   },
 

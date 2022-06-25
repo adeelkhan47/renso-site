@@ -33,9 +33,11 @@
         <span class="label"> {{ $t("afterDiscount") }} </span>
         <span class="value"> € {{ totalPrice | price }} </span>
       </div>
-      <div class="page-row details" v-if="taxes && taxes.length">
-        <span class="label"> {{ $t("taxes") }} </span>
-        <span class="value"> € {{ taxAmount | price }} </span>
+      <div class="page-row details" v-for="taxObj in taxes" :key="taxObj.id">
+        <span class="label">
+          {{ taxObj.name + " (" + taxObj.percentage + "%)" }}
+        </span>
+        <span class="value"> € {{ taxObj.tax_amount | price }} </span>
       </div>
       <div class="page-row details">
         <span class="label"> {{ $t("total") }} </span>

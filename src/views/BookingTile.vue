@@ -11,7 +11,7 @@
         <a-statistic
           :title="$t('subcategory')"
           :value="booking.item.item_subtype.name"
-          class="block space-3"
+          class="block space-2"
         />
         <a-statistic
           :title="$t('category')"
@@ -39,9 +39,9 @@
           class="block space-3"
         />
         <a-statistic
-          :title="$t('price')"
+          :title="$t('priceExcludingTax')"
           :value="booking.cost"
-          class="block space-4"
+          class="block space-2"
         >
           <template #prefix> € </template>
         </a-statistic>

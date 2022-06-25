@@ -40,9 +40,8 @@ const bookingModule = {
       bookingApi
         .getBookingDetails(cartId, voucher, transactionId)
         .then((res) => {
-          if (res && res.data) {
+          if (res && res.data && res.data.objects) {
             ctx.commit("BOOKINGS", res.data.objects.bookings);
-            ctx.commit("TAXES", res.data.objects.taxs || []);
             ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
             ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
             ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
@@ -50,10 +49,20 @@ const bookingModule = {
             const isEdit = res.data.objects.isEdited;
             const paid = res.data.objects.price_already_paid;
             const payable = res.data.objects.updated_amount;
+            const taxes = [];
+            if (res.data.objects.taxs && res.data.objects.taxs.length) {
+              res.data.objects.taxs.forEach(taxObj => {
+                taxes.push({
+                  ...taxObj,
+                  tax_amount: taxObj.percentage * (res.data.objects.effected_total_price / 100)
+                });
+              });
+            }
 
             ctx.commit("IS_EDIT", isEdit);
             ctx.commit("PAID_AMOUNT", paid);
             ctx.commit("AMOUNT_DUE", payable);
+            ctx.commit("TAXES", taxes);
 
             ctx.commit(
               "PRIVACY_POLICY_LINK",
