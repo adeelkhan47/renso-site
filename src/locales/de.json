@@ -45,5 +45,5 @@
     "amountDue": "Fälliger Betrag",
     "refundMessage": "Wenden Sie sich für eine Rückerstattung an den Support",
     "somethingWentWrong": "Etwas ist schief gelaufen",
-    "priceExcludingTax": "Preis (ohne Steuern)"
+    "price": "Preis"
 }

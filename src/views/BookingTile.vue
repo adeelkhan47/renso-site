@@ -2,49 +2,55 @@
   <div class="booking-tile" v-if="booking">
     <div class="content">
       <div class="row">
-        <a-avatar class="block" :size="55" :src="booking.item.image" />
-        <a-statistic
-          :title="$t('itemName')"
-          :value="booking.item.name"
-          class="block space-1"
-        />
-        <a-statistic
-          :title="$t('subcategory')"
-          :value="booking.item.item_subtype.name"
-          class="block space-2"
-        />
-        <a-statistic
-          :title="$t('category')"
-          :value="booking.item.item_type.name"
-          class="block space-2"
-        />
-        <a-statistic
-          :title="$t('location')"
-          :value="location(booking)"
-          class="block space-2"
-        >
-          <template #prefix>
-            <a-icon type="environment" />
-          </template>
-        </a-statistic>
-
-        <a-statistic
-          :title="$t('startTime')"
-          :value="time(booking.start_time, format)"
-          class="block space-3"
-        />
-        <a-statistic
-          :title="$t('endTime')"
-          :value="time(booking.end_time, format)"
-          class="block space-3"
-        />
-        <a-statistic
-          :title="$t('priceExcludingTax')"
-          :value="booking.cost"
-          class="block space-2"
-        >
-          <template #prefix> € </template>
-        </a-statistic>
+        <a-avatar class="block avatar" :size="55" :src="booking.item.image" />
+        <div class="details">
+          <a-statistic
+            :title="$t('itemName')"
+            :value="booking.item.name"
+            class="block space"
+          />
+          <a-statistic
+            :title="$t('subcategory')"
+            :value="booking.item.item_subtype.name"
+            class="block space"
+          />
+          <a-statistic
+            :title="$t('category')"
+            :value="booking.item.item_type.name"
+            class="block space"
+          />
+          <a-statistic
+            :title="$t('location')"
+            :value="location(booking)"
+            class="block space"
+          >
+            <template #prefix>
+              <a-icon type="environment" />
+            </template>
+          </a-statistic>
+          <a-statistic
+            :title="$t('startTime')"
+            :value="time(booking.start_time, format)"
+            class="block space"
+          />
+          <a-statistic
+            :title="$t('endTime')"
+            :value="time(booking.end_time, format)"
+            class="block space"
+          />
+          <a-statistic
+            :title="$t('price')"
+            :value="booking.cost"
+            class="block space"
+          >
+            <template #prefix> € </template>
+          </a-statistic>
+          <a-statistic
+            :title="$t('taxes')"
+            :value="taxes"
+            class="block space"
+          />
+        </div>
       </div>
       <div class="row">
         <a-button
@@ -88,6 +94,25 @@ export default {
       if (booking && booking.location && booking.location.name) {
         return booking.location.name;
       } else return "-";
+    },
+
+    taxes() {
+      let temp = "-";
+      if (
+        this.booking &&
+        this.booking.item &&
+        this.booking.item.item_subtype &&
+        this.booking.item.item_subtype.itemSubTypeTaxs &&
+        this.booking.item.item_subtype.itemSubTypeTaxs.length
+      ) {
+        const taxes = this.booking.item.item_subtype.itemSubTypeTaxs.map(
+          (obj) => {
+            return obj.tax.name + " (" + obj.tax.percentage + "%)";
+          }
+        );
+        temp = taxes.join(", ");
+      }
+      return temp;
     }
   },
 
@@ -107,6 +132,8 @@ export default {
   border-radius: 10px;
   border: 1px solid lightgrey;
   padding: 2px 3px;
+  max-width: 1300px;
+  margin-right: 10px;
 }
 
 .content {
@@ -121,8 +148,22 @@ export default {
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  flex-wrap: wrap;
   margin: 4px 6px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.details {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex: 1;
 }
 
 .action {
@@ -133,25 +174,17 @@ export default {
   margin: 8px;
 }
 
-.space-1 {
-  width: 180px;
-}
-
-.space-2 {
-  width: 130px;
-}
-
-.space-3 {
-  width: 200px;
-}
-
-.space-4 {
-  width: 80px;
+.space {
+  min-width: 200px;
 }
 
 @media only screen and (max-width: 750px) {
   .row {
     justify-content: flex-start;
+  }
+
+  .space {
+    min-width: 140px;
   }
 }
 
@@ -170,6 +203,12 @@ export default {
   .block {
     text-align: center;
   }
+
+  .details {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
 
@@ -182,7 +221,7 @@ export default {
   font-size: 18px;
 }
 
-.space-3 .ant-statistic-content-value {
+.space .ant-statistic-content-value {
   font-size: 17px;
 }
 
@@ -197,9 +236,7 @@ export default {
   }
 
   .block,
-  .space-1,
-  .space-2,
-  .space-3 {
+  .space {
     width: 100%;
   }
 
@@ -211,7 +248,7 @@ export default {
     font-size: 15px;
   }
 
-  .space-3 .ant-statistic-content-value {
+  .space .ant-statistic-content-value {
     font-size: 14px;
   }
 }
