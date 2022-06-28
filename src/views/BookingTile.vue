@@ -3,54 +3,48 @@
     <div class="content">
       <div class="row">
         <a-avatar class="block avatar" :size="55" :src="booking.item.image" />
-        <div class="details">
-          <a-statistic
-            :title="$t('itemName')"
-            :value="booking.item.name"
-            class="block space"
-          />
-          <a-statistic
-            :title="$t('subcategory')"
-            :value="booking.item.item_subtype.name"
-            class="block space"
-          />
-          <a-statistic
-            :title="$t('category')"
-            :value="booking.item.item_type.name"
-            class="block space"
-          />
-          <a-statistic
-            :title="$t('location')"
-            :value="location(booking)"
-            class="block space"
-          >
-            <template #prefix>
-              <a-icon type="environment" />
-            </template>
-          </a-statistic>
-          <a-statistic
-            :title="$t('startTime')"
-            :value="time(booking.start_time, format)"
-            class="block space"
-          />
-          <a-statistic
-            :title="$t('endTime')"
-            :value="time(booking.end_time, format)"
-            class="block space"
-          />
-          <a-statistic
-            :title="$t('price')"
-            :value="booking.cost"
-            class="block space"
-          >
-            <template #prefix> € </template>
-          </a-statistic>
-          <a-statistic
-            :title="$t('taxes')"
-            :value="taxes"
-            class="block space"
-          />
-        </div>
+        <a-statistic
+          :title="$t('itemName')"
+          :value="booking.item.name"
+          class="block space"
+        />
+        <a-statistic
+          :title="$t('subcategory')"
+          :value="booking.item.item_subtype.name"
+          class="block space"
+        />
+        <!-- <a-statistic
+          :title="$t('category')"
+          :value="booking.item.item_type.name"
+          class="block space"
+        /> -->
+        <a-statistic
+          :title="$t('location')"
+          :value="location(booking)"
+          class="block space"
+        >
+          <template #prefix>
+            <a-icon type="environment" />
+          </template>
+        </a-statistic>
+        <a-statistic
+          :title="$t('startTime')"
+          :value="time(booking.start_time, format)"
+          class="block space"
+        />
+        <a-statistic
+          :title="$t('endTime')"
+          :value="time(booking.end_time, format)"
+          class="block space"
+        />
+        <a-statistic
+          :title="$t('price')"
+          :value="booking.cost"
+          class="block space"
+        >
+          <template #prefix> € </template>
+        </a-statistic>
+        <a-statistic :title="$t('taxes')" :value="taxes" class="block space" />
       </div>
       <div class="row">
         <a-button
@@ -132,7 +126,6 @@ export default {
   border-radius: 10px;
   border: 1px solid lightgrey;
   padding: 2px 3px;
-  max-width: 1300px;
   margin-right: 10px;
 }
 
@@ -148,22 +141,8 @@ export default {
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  margin: 4px 6px;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  position: relative;
-}
-
-.details {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
   flex-wrap: wrap;
-  flex: 1;
+  margin: 4px 6px;
 }
 
 .action {
@@ -175,16 +154,14 @@ export default {
 }
 
 .space {
-  min-width: 200px;
+  min-width: 100px;
+  width: auto;
+  margin: 5px 15px;
 }
 
 @media only screen and (max-width: 750px) {
   .row {
     justify-content: flex-start;
-  }
-
-  .space {
-    min-width: 140px;
   }
 }
 
@@ -203,12 +180,6 @@ export default {
   .block {
     text-align: center;
   }
-
-  .details {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
 }
 </style>
 
@@ -222,7 +193,7 @@ export default {
 }
 
 .space .ant-statistic-content-value {
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .action .anticon {
