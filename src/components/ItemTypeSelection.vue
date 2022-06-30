@@ -94,16 +94,12 @@ export default {
     },
 
     itemActivated(slide, event) {
-      if (
-        event &&
-        event.slide &&
-        event.slide.hasAttribute("itemType") &&
-        event.index === this.currentSlideIndex
-      ) {
+      if (event && event.slide && event.slide.hasAttribute("itemType")) {
         let itemType = event.slide.getAttribute("itemType");
         if (itemType && itemType.length) {
           itemType = JSON.parse(itemType);
           this.setSelectedItemType({ ...itemType, index: event.index });
+          this.currentSlideIndex = event.index;
         }
       }
     }

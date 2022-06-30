@@ -43,9 +43,10 @@ function removeIt(key) {
 }
 
 function removeMatched(str, match) {
+  let deleteKeys = [];
   if (match && Object.values(MATCH_REGEX).includes(match)) {
     const data = getStoredData();
-    let deleteKeys = Object.keys(data);
+    deleteKeys = Object.keys(data);
 
     switch (match) {
       case MATCH_REGEX.STARTS_WITH:
@@ -63,6 +64,7 @@ function removeMatched(str, match) {
 
     localStorage.setItem(storageKey, JSON.stringify(data));
   }
+  return deleteKeys.length > 0
 }
 
 export {

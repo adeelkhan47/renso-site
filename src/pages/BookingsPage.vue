@@ -31,11 +31,11 @@
       </div>
       <div class="page-row details">
         <span class="label"> {{ $t("afterDiscount") }} </span>
-        <span class="value"> € {{ totalPrice | price }} </span>
+        <span class="value"> € {{ finalPrice | price }} </span>
       </div>
-      <div class="page-row details" v-if="taxes && taxes.length">
-        <span class="label"> {{ $t("taxes") }} </span>
-        <span class="value"> € {{ taxAmount | price }} </span>
+      <div class="page-row details" v-for="taxObj in taxes" :key="taxObj.id">
+        <span class="label"> {{ taxObj.tax_name }} </span>
+        <span class="value"> € {{ taxObj.tax_amount }} </span>
       </div>
       <div class="page-row details">
         <span class="label"> {{ $t("total") }} </span>
@@ -120,8 +120,6 @@ export default {
     ...mapState("bookingModule", [
       "loading",
       "subtotal",
-      "totalPrice",
-      "taxAmount",
       "finalPrice",
       "isEdit",
       "paidAmount",
