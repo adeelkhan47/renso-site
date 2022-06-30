@@ -16,8 +16,6 @@ const bookingModule = {
       loading: false,
       bookings: [],
       subtotal: 0,
-      totalPrice: 0,
-      taxAmount: 0,
       finalPrice: 0,
       paidAmount: 0,
       amountDue: 0,
@@ -40,12 +38,11 @@ const bookingModule = {
       bookingApi
         .getBookingDetails(cartId, voucher, transactionId)
         .then((res) => {
-          if (res && res.data) {
+          if (res && res.data && res.data.objects) {
             ctx.commit("BOOKINGS", res.data.objects.bookings);
-            ctx.commit("TAXES", res.data.objects.taxs || []);
-            ctx.commit("SUB_TOTAL", res.data.objects.actual_total_price);
-            ctx.commit("TOTAL_PRICE", res.data.objects.effected_total_price);
-            ctx.commit("TAX_AMOUNT", res.data.objects.tax_amount);
+            ctx.commit("SUB_TOTAL", res.data.objects.price);
+            ctx.commit("FINAL_PRICE", res.data.objects.final_price);
+            ctx.commit("TAXES", res.data.objects.taxs);
 
             const isEdit = res.data.objects.isEdited;
             const paid = res.data.objects.price_already_paid;
@@ -59,10 +56,7 @@ const bookingModule = {
               "PRIVACY_POLICY_LINK",
               res.data.objects.privacy_policy_link || ""
             );
-            ctx.commit(
-              "FINAL_PRICE",
-              res.data.objects.actual_total_price_after_tax
-            );
+
             ctx.commit(
               "HAS_BAG",
               !!(res.data.objects.bookings && res.data.objects.bookings.length)
@@ -78,8 +72,6 @@ const bookingModule = {
             ctx.commit("BOOKINGS", []);
             ctx.commit("TAXES", []);
             ctx.commit("SUB_TOTAL", "0");
-            ctx.commit("TOTAL_PRICE", "0");
-            ctx.commit("TAX_AMOUNT", "0");
             ctx.commit("PRIVACY_POLICY_LINK", "");
             ctx.commit("FINAL_PRICE", "0");
             ctx.commit("HAS_BAG", false);
@@ -95,8 +87,6 @@ const bookingModule = {
           ctx.commit("BOOKINGS", []);
           ctx.commit("TAXES", []);
           ctx.commit("SUB_TOTAL", "0");
-          ctx.commit("TOTAL_PRICE", "0");
-          ctx.commit("TAX_AMOUNT", "0");
           ctx.commit("PRIVACY_POLICY_LINK", "");
           ctx.commit("FINAL_PRICE", "0");
           ctx.commit("HAS_BAG", false);
@@ -198,14 +188,6 @@ const bookingModule = {
       state.subtotal = val;
     },
 
-    TOTAL_PRICE(state, val) {
-      state.totalPrice = val;
-    },
-
-    TAX_AMOUNT(state, val) {
-      state.taxAmount = val;
-    },
-
     FINAL_PRICE(state, val) {
       state.finalPrice = val;
     },
@@ -237,8 +219,6 @@ const bookingModule = {
     RESET(state) {
       state.bookings = [];
       state.subtotal = 0;
-      state.totalPrice = 0;
-      state.taxAmount = 0;
       state.finalPrice = 0;
       state.taxes = [];
       state.hasBag = false;

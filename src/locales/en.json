@@ -39,10 +39,11 @@
     "phoneNumberIsRequired": "Phone number is required",
     "checkout": "Checkout",
     "valueIsRequired": "Value is required",
-    "acceptPrivacyPolicy": "Accept Privacy Policy",
+    "accept": "Accept",
     "selectPaymentMethod": "Select Payment Method",
     "alreadyPaid": "Already paid",
     "amountDue": "Amount Due",
     "refundMessage": "Contact support for a refund",
-    "somethingWentWrong": "Something went wrong"
+    "somethingWentWrong": "Something went wrong",
+    "price": "Price"
 }

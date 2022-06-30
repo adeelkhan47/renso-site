@@ -86,11 +86,16 @@
           </a-form-model-item>
           <a-form-model-item
             :wrapper-col="actionWrapCol"
-            v-if="privacyPolicyLink"
+            class="form-checkbox-item"
           >
-            <a-checkbox v-model="privacy">
-              <a :href="privacyPolicyLink" target="blank">
-                {{ $t("acceptPrivacyPolicy") }}
+            <a-checkbox v-model="acceptPolicy">
+              {{ $t("accept") }}
+              <a :href="settings.link1" target="blank" class="link">
+                {{ settings.link1_name || settings.link1 }}
+              </a>
+              &
+              <a :href="settings.link2" target="blank" class="link">
+                {{ settings.link2_name || settings.link2 }}
               </a>
             </a-checkbox>
           </a-form-model-item>
@@ -105,7 +110,7 @@
               class="action"
               :disabled="
                 !isReady ||
-                (!privacy && privacyPolicyLink) ||
+                !acceptPolicy ||
                 !paymentMethods ||
                 paymentMethods.length === 0
               "
@@ -142,11 +147,10 @@ export default {
 
   data() {
     return {
-      privacy: false,
       loading: false,
       labelCol: { sm: {}, md: { span: 8 } },
       wrapperCol: { sm: {}, md: { span: 10 } },
-      actionWrapCol: { sm: {}, md: { span: 9, offset: 9 } },
+      actionWrapCol: { sm: {}, md: { span: 10, offset: 8 } },
       other: "",
       form: {
         client_name: "",
@@ -181,12 +185,13 @@ export default {
       },
       extraFields: [],
       paymentMethods: [],
-      selectedPaymentMethodId: null
+      selectedPaymentMethodId: null,
+      acceptPolicy: false
     };
   },
 
   computed: {
-    ...mapState("bookingModule", ["privacyPolicyLink"]),
+    ...mapState("appSettingModule", ["settings"]),
 
     isReady() {
       return !!(
@@ -432,6 +437,15 @@ img.logo-img {
   margin-bottom: 70px;
   overflow: hidden;
 }
+
+a.link {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+a.link:hover {
+  text-decoration: none;
+}
 </style>
 
 <style>
@@ -448,6 +462,10 @@ img.logo-img {
   display: block;
   margin-bottom: 10px;
   text-overflow: ellipsis;
+}
+
+.form-checkbox-item .ant-form-item-control {
+  line-height: 20px;
 }
 
 @media only screen and (max-width: 770px) {
